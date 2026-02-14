@@ -14,7 +14,7 @@ const SellerPage = () => {
     const [loading, setLoading] = useState(false);
 
     if (!user) {
-        return <div style={{textAlign: 'center', marginTop: '50px'}}>Please <a href="/login">sign in</a> to access the Seller Dashboard</div>;
+        return <div className="container" style={{textAlign: 'center', marginTop: '50px'}}>Please <a href="/login">sign in</a> to access the Seller Dashboard</div>;
     }
 
     const [myProducts, setMyProducts] = useState([]);
@@ -92,10 +92,10 @@ const SellerPage = () => {
     };
 
     return (
-        <div className="seller-dashboard container" style={{maxWidth: '800px', margin: '40px auto'}}>
-            <h1 className="dashboard-title" style={{fontSize: '28px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px'}}>Seller Dashboard</h1>
+        <div className="seller-dashboard container">
+            <h1 style={{fontSize: '24px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px'}}>Seller Dashboard</h1>
             
-            <div className="add-product-form" style={{background: 'var(--surface-tertiary)', border: '1px solid var(--border-color)', padding: '20px', borderRadius: '4px', marginBottom: '40px'}}>
+            <div style={{background: 'var(--surface-tertiary)', border: '1px solid var(--border-color)', padding: '20px', borderRadius: '4px', marginBottom: '40px'}}>
                 <h2 style={{fontSize: '20px', marginBottom: '15px'}}>Add a New Product</h2>
                 <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
                     <div>
@@ -109,8 +109,8 @@ const SellerPage = () => {
                         />
                     </div>
 
-                    <div style={{display: 'flex', gap: '20px'}}>
-                        <div style={{flex: 1}}>
+                    <div className="seller-form-row">
+                        <div>
                             <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Price ($)</label>
                             <input 
                                 type="number" 
@@ -121,7 +121,7 @@ const SellerPage = () => {
                                 style={{width: '100%', padding: '8px', border: '1px solid var(--input-border)', borderRadius: '3px', background: 'var(--input-bg)', color: 'var(--text-primary)'}}
                             />
                         </div>
-                        <div style={{flex: 1}}>
+                        <div>
                             <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Category</label>
                             <select 
                                 value={category}
@@ -188,17 +188,17 @@ const SellerPage = () => {
             </div>
 
             {/* My Products List */}
-            <div className="my-products-list">
-                <h2 style={{fontSize: '24px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px'}}>Your Listings</h2>
+            <div>
+                <h2 style={{fontSize: '22px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px'}}>Your Listings</h2>
                 {myProducts.length === 0 ? (
                     <p>No products listed yet.</p>
                 ) : (
                     <div style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
                         {myProducts.map(product => (
-                            <div key={product.id} style={{display: 'flex', gap: '20px', padding: '15px', border: '1px solid var(--border-color)', background: 'var(--surface-primary)', borderRadius: '5px', alignItems: 'center'}}>
-                                <img src={product.image_url} alt={product.title} style={{width: '80px', height: '80px', objectFit: 'contain'}} />
-                                <div style={{flexGrow: 1}}>
-                                    <h3 style={{fontSize: '16px', margin: '0 0 5px 0'}}>{product.title}</h3>
+                            <div key={product.id} className="seller-product-item">
+                                <img src={product.image_url} alt={product.title} />
+                                <div style={{flexGrow: 1, minWidth: 0}}>
+                                    <h3 style={{fontSize: '16px', margin: '0 0 5px 0', wordBreak: 'break-word'}}>{product.title}</h3>
                                     <p style={{fontWeight: 'bold', color: 'var(--price-color)'}}>${product.price}</p>
                                 </div>
                                 <button 
@@ -210,7 +210,7 @@ const SellerPage = () => {
                                         borderRadius: '5px',
                                         color: 'var(--delete-color)',
                                         cursor: 'pointer',
-                                        boxShadow: '0 2px 5px rgba(215,215,215, 0.5)'
+                                        flexShrink: 0
                                     }}
                                 >
                                     Delete

@@ -74,10 +74,10 @@ const HomePage = () => {
   if (loading) return <div className="container">Loading products...</div>;
 
   return (
-    <div className="home-page" style={{ display: 'flex', gap: '20px' }}>
+    <div className="home-page">
       
       {/* Sidebar Filters */}
-      <aside className="filters-sidebar" style={{ width: '250px', flexShrink: 0, paddingRight: '20px', borderRight: '1px solid var(--border-color)' }}>
+      <aside className="filters-sidebar">
         <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>Department</h3>
         <ul style={{ listStyle: 'none' }}>
             {categories.map(cat => (
@@ -91,7 +91,8 @@ const HomePage = () => {
                             fontWeight: selectedCategory === cat ? 'bold' : 'normal',
                             cursor: 'pointer',
                             textAlign: 'left',
-                            padding: 0
+                            padding: '2px 8px',
+                            borderRadius: '4px'
                         }}
                     >
                         {cat}
@@ -112,7 +113,7 @@ const HomePage = () => {
       </aside>
 
       {/* Product Grid */}
-      <div className="product-list-container" style={{ flexGrow: 1 }}>
+      <div className="product-list-container">
         <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '15px' }}>Results</h2>
         <div className="product-grid">
             {products.length > 0 ? (

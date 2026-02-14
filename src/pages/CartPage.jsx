@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { Trash2 } from 'lucide-react';
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, totalPrice, clearCart } = useCart();
@@ -22,25 +21,25 @@ const CartPage = () => {
 
   if (cart.length === 0) {
     return (
-      <div className="cart-page container">
+      <div className="container" style={{background: 'var(--surface-primary)', padding: '40px', borderRadius: '8px'}}>
         <h2>Your Amazon Cart is empty.</h2>
-        <p>Check your Saved for later items below or continue shopping.</p>
+        <p style={{marginTop: '10px'}}>Check your Saved for later items below or continue shopping.</p>
       </div>
     );
   }
 
   return (
-    <div className="cart-page container">
+    <div className="cart-page">
       <div className="cart-items">
-        <h1 className="cart-header">Shopping Cart</h1>
+        <h1 className="cart-header" style={{fontSize: '24px', marginBottom: '10px'}}>Shopping Cart</h1>
         <div className="cart-list">
           {cart.map(item => (
-            <div key={item.id} className="cart-item" style={{display: 'flex', gap: '20px', borderBottom: '1px solid var(--border-color)', padding: '20px 0'}}>
-              <img src={item.image_url} alt={item.title} width="100" height="100" style={{objectFit: 'contain'}} />
-              <div className="item-details" style={{flexGrow: 1}}>
-                <h3 style={{fontSize: '18px', color: 'var(--accent-link)'}}>{item.title}</h3>
-                <p style={{color: 'var(--price-color)', fontWeight: 'bold'}}>${item.price.toFixed(2)}</p>
-                <div className="qty-control" style={{display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px'}}>
+            <div key={item.id} className="cart-item">
+              <img src={item.image_url} alt={item.title} width="100" height="100" />
+              <div style={{flexGrow: 1, minWidth: 0}}>
+                <h3 style={{fontSize: '16px', color: 'var(--accent-link)', wordBreak: 'break-word'}}>{item.title}</h3>
+                <p style={{color: 'var(--price-color)', fontWeight: 'bold', marginTop: '4px'}}>${item.price.toFixed(2)}</p>
+                <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px', flexWrap: 'wrap'}}>
                   <label>Qty:</label>
                   <select 
                     value={item.quantity} 
@@ -58,15 +57,14 @@ const CartPage = () => {
             </div>
           ))}
         </div>
-        <div className="cart-subtotal" style={{textAlign: 'right', marginTop: '20px', fontSize: '18px'}}>
+        <div style={{textAlign: 'right', marginTop: '20px', fontSize: '18px'}}>
             Subtotal ({cart.length} items): <strong>${totalPrice.toFixed(2)}</strong>
         </div>
       </div>
 
-      <div className="checkout-sidebar" style={{background: 'var(--checkout-bg)', padding: '20px', height: 'fit-content', borderRadius: '8px'}}>
+      <div className="checkout-sidebar">
         <p style={{fontSize: '18px'}}>Subtotal ({cart.length} items): <strong>${totalPrice.toFixed(2)}</strong></p>
         <button 
-            className="checkout-btn" 
             onClick={checkoutViaWhatsApp}
             style={{
                 background: 'var(--btn-primary)', 

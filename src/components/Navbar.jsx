@@ -45,37 +45,35 @@ const Navbar = () => {
                     onClick={toggleTheme} 
                     title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
                 >
-                    {theme === 'light' ? <Moon size={22} /> : <Sun size={22} />}
+                    {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
                 </button>
 
                 {user ? (
-                    <div className="nav-container">
-                        <div className="nav-item_row" style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
-                            <div className="nav-item" onClick={() => navigate('/seller')}>
-                                <span>Hello, {user.email?.split('@')[0]}</span>
-                                <span>**Seller Dashboard**</span>
-                            </div>
-                            <div className="nav-item" onClick={signOut} style={{marginLeft: '15px'}}>
-                                <LogOut size={20} />
-                                <span>Sign Out</span>
-                            </div>
+                    <div className="nav-links" style={{gap: '8px'}}>
+                        <div className="nav-item" onClick={() => navigate('/seller')}>
+                            <span style={{fontSize: '11px', fontWeight: 'normal'}}>Hello, {user.email?.split('@')[0]}</span>
+                            <span>Seller</span>
+                        </div>
+                        <div className="nav-item" onClick={signOut}>
+                            <LogOut size={18} />
+                            <span style={{fontSize: '11px'}}>Out</span>
                         </div>
                     </div>
                 ) : (
                     <Link to="/login" className="nav-item">
-                        <span>Hello, Sign in</span>
-                        <span>Account & Lists</span>
+                        <span style={{fontSize: '11px', fontWeight: 'normal'}}>Hello, Sign in</span>
+                        <span>Account</span>
                     </Link>
                 )}
 
                 <Link to="/wishlist" className="nav-item">
-                    <span>Your</span>
+                    <span style={{fontSize: '11px', fontWeight: 'normal'}}>Your</span>
                     <span>Wishlist</span>
                 </Link>
 
-                <Link to="/cart" className="nav-item" style={{flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
+                <Link to="/cart" className="nav-item" style={{flexDirection: 'row', alignItems: 'center', gap: '4px'}}>
                     <div style={{position: 'relative'}}>
-                        <ShoppingCart size={30} />
+                        <ShoppingCart size={26} />
                         <span style={{
                             position: 'absolute', 
                             top: '-5px', 
@@ -83,14 +81,14 @@ const Navbar = () => {
                             background: '#f08804', 
                             color: '#111', 
                             borderRadius: '50%', 
-                            padding: '2px 6px', 
-                            fontSize: '12px',
+                            padding: '1px 5px', 
+                            fontSize: '11px',
                             fontWeight: 'bold'
                         }}>
                             {cartCount}
                         </span>
                     </div>
-                    <span style={{alignSelf: 'end', marginBottom: '5px'}}>Cart</span>
+                    <span style={{fontSize: '11px', fontWeight: 'bold'}}>Cart</span>
                 </Link>
             </div>
         </nav>

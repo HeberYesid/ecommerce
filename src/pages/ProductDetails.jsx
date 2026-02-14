@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
-import { Plus, Heart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { useWishlist } from '../context/WishlistContext';
 
 import { mockProducts } from '../data/mockProducts.js';
@@ -57,17 +57,17 @@ const ProductDetails = () => {
     setReviews(prev => [...prev, newReview]);
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (!product) return <div>Product not found!</div>;
+  if (loading) return <div className="container">Loading...</div>;
+  if (!product) return <div className="container">Product not found!</div>;
 
   return (
     <div className="product-details container">
       <div className="product-image-large">
-        <img src={product.image_url} alt={product.title} style={{maxWidth: '100%', maxHeight: '500px'}} />
+        <img src={product.image_url} alt={product.title} />
       </div>
       <div className="product-info-full">
-        <h1>{product.title}</h1>
-        <p className="price">${product.price}</p>
+        <h1 style={{fontSize: '22px', lineHeight: 1.3}}>{product.title}</h1>
+        <p style={{fontSize: '24px', fontWeight: 'bold', margin: '10px 0'}}>${product.price}</p>
         
         {/* Stock Status */}
         <div style={{ margin: '10px 0', fontSize: '14px' }}>
@@ -80,15 +80,15 @@ const ProductDetails = () => {
             )}
         </div>
 
-        <p className="description">{product.description}</p>
+        <p style={{margin: '15px 0', lineHeight: 1.6}}>{product.description}</p>
         
-        <div className="action-buttons" style={{display: 'flex', gap: '10px'}}>
+        <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
             {product.stock > 0 ? (
-                <button onClick={() => addToCart(product)} className="add-to-cart-btn-large" style={{flex: 1}}>
+                <button onClick={() => addToCart(product)} className="add-to-cart-btn" style={{flex: '1 1 200px', maxWidth: '300px'}}>
                   Add to Cart
                 </button>
             ) : (
-                <button disabled className="add-to-cart-btn-large" style={{flex: 1, background: 'var(--surface-secondary)', border: '1px solid var(--border-color)', cursor: 'not-allowed', color: 'var(--text-secondary)'}}>
+                <button disabled style={{flex: '1 1 200px', maxWidth: '300px', background: 'var(--surface-secondary)', border: '1px solid var(--border-color)', cursor: 'not-allowed', color: 'var(--text-secondary)', borderRadius: '20px', padding: '8px'}}>
                   Out of Stock
                 </button>
             )}
@@ -102,7 +102,8 @@ const ProductDetails = () => {
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    flexShrink: 0
                 }}
                 title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
             >

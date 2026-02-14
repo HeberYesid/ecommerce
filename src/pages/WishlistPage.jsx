@@ -11,33 +11,33 @@ const WishlistPage = () => {
         return (
             <div className="container" style={{padding: '40px'}}>
                 <h1>Your Wish List is empty.</h1>
-                <p>Explore more and shortlist some items.</p>
-                <Link to="/" style={{color: 'var(--accent-link)', textDecoration: 'underline'}}>Continue shopping</Link>
+                <p style={{marginTop: '10px'}}>Explore more and shortlist some items.</p>
+                <Link to="/" style={{color: 'var(--accent-link)', textDecoration: 'underline', marginTop: '10px', display: 'inline-block'}}>Continue shopping</Link>
             </div>
         );
     }
 
     return (
-        <div className="container" style={{padding: '20px'}}>
-            <h1 style={{borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', marginBottom: '20px'}}>Your Wish List</h1>
-            <div className="wishlist-grid" style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
+        <div className="container">
+            <h1 style={{borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', marginBottom: '20px', fontSize: '22px'}}>Your Wish List</h1>
+            <div style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
                 {wishlist.map(product => (
-                    <div key={product.id} style={{display: 'flex', gap: '20px', border: '1px solid var(--border-color)', padding: '20px', borderRadius: '4px', background: 'var(--surface-primary)'}}>
-                        <img src={product.image_url} alt={product.title} style={{width: '150px', height: '150px', objectFit: 'contain'}} />
-                        <div style={{flexGrow: 1}}>
-                            <Link to={`/product/${product.id}`} style={{fontSize: '18px', fontWeight: 'bold', color: 'var(--accent-link)'}}>{product.title}</Link>
+                    <div key={product.id} className="wishlist-item">
+                        <img src={product.image_url} alt={product.title} />
+                        <div style={{flexGrow: 1, minWidth: 0}}>
+                            <Link to={`/product/${product.id}`} style={{fontSize: '16px', fontWeight: 'bold', color: 'var(--accent-link)', wordBreak: 'break-word'}}>{product.title}</Link>
                             <p style={{fontSize: '18px', fontWeight: 'bold', color: 'var(--price-color)', margin: '10px 0'}}>${product.price}</p>
-                            <div style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
+                            <div className="wishlist-item-actions" style={{display: 'flex', gap: '10px', marginTop: '15px', flexWrap: 'wrap'}}>
                                 <button 
                                     onClick={() => { addToCart(product); removeFromWishlist(product.id); }}
-                                    className="a-button-primary"
                                     style={{
                                         background: 'var(--btn-primary)', 
                                         border: '1px solid var(--btn-primary-hover)', 
-                                        padding: '5px 15px', 
+                                        padding: '6px 15px', 
                                         borderRadius: '20px',
                                         cursor: 'pointer',
-                                        color: '#0f1111'
+                                        color: '#0f1111',
+                                        fontSize: '13px'
                                     }}
                                 >
                                     Add to Cart
@@ -47,10 +47,11 @@ const WishlistPage = () => {
                                     style={{
                                         background: 'var(--surface-primary)', 
                                         border: '1px solid var(--border-color)', 
-                                        padding: '5px 15px', 
+                                        padding: '6px 15px', 
                                         borderRadius: '8px',
                                         cursor: 'pointer',
-                                        color: 'var(--text-primary)'
+                                        color: 'var(--text-primary)',
+                                        fontSize: '13px'
                                     }}
                                 >
                                     Delete
