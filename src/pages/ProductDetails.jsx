@@ -6,10 +6,13 @@ import { Plus } from 'lucide-react';
 
 import { mockProducts } from '../data/mockProducts.js';
 
+import ReviewSection from '../components/ReviewSection';
+
 const ProductDetails = () => {
   const { id } = useParams();
   const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
+  const [reviews, setReviews] = useState([]); // Store reviews locally for now
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,17 +30,29 @@ const ProductDetails = () => {
       if (error) {
         console.warn('Supabase details fetch failed, trying mock:', error);
         const mock = mockProducts.find(p => p.id === id);
-        if (mock) setProduct(mock);
+        if (mock) {
+            setProduct(mock);
+            setReviews(mock.reviews || []);
+        }
       } else {
         setProduct(data);
+        // fetch reviews from Supabase here later
+        setReviews([]); 
       }
     } catch (e) {
       console.warn('Exception in details fetch, trying mock:', e);
       const mock = mockProducts.find(p => p.id === id);
-      if (mock) setProduct(mock);
+      if (mock) {
+          setProduct(mock);
+          setReviews(mock.reviews || []);
+      }
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleReviewAdded = (newReview) => {
+    setReviews(prev => [...prev, newReview]);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -56,6 +71,8 @@ const ProductDetails = () => {
         <button onClick={() => addToCart(product)} className="add-to-cart-btn-large">
           Apply Coupon / Add to Cart
         </button>
+        
+        <ReviewSection productId={id} reviews={reviews} onReviewAdded={handleReviewAdded} />
       </div>
     </div>
   );
