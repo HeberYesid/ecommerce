@@ -57,6 +57,11 @@ const Navbar = () => {
                     </Link>
                 )}
 
+                <Link to="/wishlist" className="nav-item">
+                    <span>Your</span>
+                    <span>Wishlist</span>
+                </Link>
+
                 <Link to="/cart" className="nav-item" style={{flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
                     <div style={{position: 'relative'}}>
                         <ShoppingCart size={30} />

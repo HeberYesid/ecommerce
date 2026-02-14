@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
-import { Plus } from 'lucide-react';
+import { Plus, Heart } from 'lucide-react';
+import { useWishlist } from '../context/WishlistContext';
 
 import { mockProducts } from '../data/mockProducts.js';
 
@@ -11,6 +12,8 @@ import ReviewSection from '../components/ReviewSection';
 const ProductDetails = () => {
   const { id } = useParams();
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const isWishlisted = isInWishlist(id);
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]); // Store reviews locally for now
   const [loading, setLoading] = useState(true);
@@ -68,9 +71,27 @@ const ProductDetails = () => {
         <p className="price">${product.price}</p>
         <p className="description">{product.description}</p>
         
-        <button onClick={() => addToCart(product)} className="add-to-cart-btn-large">
-          Apply Coupon / Add to Cart
-        </button>
+        <div className="action-buttons" style={{display: 'flex', gap: '10px'}}>
+            <button onClick={() => addToCart(product)} className="add-to-cart-btn-large" style={{flex: 1}}>
+              Add to Cart
+            </button>
+            <button 
+                onClick={() => isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product)}
+                style={{
+                    background: 'white',
+                    border: '1px solid #D5D9D9',
+                    borderRadius: '20px',
+                    padding: '8px 15px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+                title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+            >
+                <Heart fill={isWishlisted ? "#B12704" : "none"} color={isWishlisted ? "#B12704" : "#0F1111"} />
+            </button>
+        </div>
         
         <ReviewSection productId={id} reviews={reviews} onReviewAdded={handleReviewAdded} />
       </div>
