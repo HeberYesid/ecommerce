@@ -10,6 +10,7 @@ const SellerPage = () => {
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [imageUrl, setImageUrl] = useState('');
+    const [category, setCategory] = useState('Electronics');
     const [loading, setLoading] = useState(false);
 
     if (!user) {
@@ -70,6 +71,7 @@ const SellerPage = () => {
                     price: parseFloat(price),
                     description,
                     image_url: imageUrl,
+                    category,
                     seller_id: user.id
                 }
             ]).select();
@@ -80,6 +82,7 @@ const SellerPage = () => {
             setPrice('');
             setDescription('');
             setImageUrl('');
+            setCategory('Electronics');
             if (data) setMyProducts(prev => [...prev, ...data]);
         } catch (error) {
             alert('Error adding product: ' + error.message);
@@ -118,17 +121,39 @@ const SellerPage = () => {
                                 style={{width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '3px'}}
                             />
                         </div>
-                        <div style={{flex: 2}}>
-                            <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Image URL</label>
-                            <input 
-                                type="url" 
-                                required 
-                                value={imageUrl}
-                                onChange={(e) => setImageUrl(e.target.value)}
-                                placeholder="https://example.com/image.jpg"
-                                style={{width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '3px'}}
-                            />
+                        <div style={{flex: 1}}>
+                            <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Category</label>
+                            <select 
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                style={{
+                                    width: '100%', 
+                                    padding: '8px', 
+                                    border: '1px solid #ccc', 
+                                    borderRadius: '3px',
+                                    background: 'white'
+                                }}
+                            >
+                                <option value="Electronics">Electronics</option>
+                                <option value="Gaming">Gaming</option>
+                                <option value="Wearables">Wearables</option>
+                                <option value="Home">Home</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
+                    </div>
+
+                    <div>
+                        <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Image URL</label>
+                        <input 
+                            type="url" 
+                            required 
+                            value={imageUrl}
+                            onChange={(e) => setImageUrl(e.target.value)}
+                            placeholder="https://example.com/image.jpg"
+                            style={{width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '3px'}}
+                        />
                     </div>
 
                     <div>

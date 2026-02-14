@@ -61,7 +61,7 @@ const HomePage = () => {
       setProducts(filtered);
   };
 
-  const categories = ['All', 'Electronics', 'Gaming', 'Wearables'];
+  const categories = ['All', 'Electronics', 'Gaming', 'Wearables', 'Home', 'Fashion', 'Other'];
 
   const handleCategoryChange = (category) => {
       const newParams = new URLSearchParams(searchParams);

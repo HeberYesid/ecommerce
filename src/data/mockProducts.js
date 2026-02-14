@@ -73,5 +73,38 @@ export const mockProducts = [
     category: 'Electronics',
     stock: 3,
     reviews: []
+  },
+  {
+    id: '7',
+    title: 'Keurig K-Elite Coffee Maker, Single Serve K-Cup Pod Coffee Brewer',
+    price: 189.00,
+    description: 'Keurig K-Elite Single Serve Coffee Maker. Features Strong Brew Button, Iced Setting, and Hot Water on Demand.',
+    image_url: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&q=80&w=1000',
+    seller_id: 'mock-seller',
+    category: 'Home',
+    stock: 15,
+    reviews: []
+  },
+  {
+    id: '8',
+    title: 'Levi\'s Men\'s 501 Original Fit Jeans',
+    price: 69.50,
+    description: 'The original blue jean since 1873. Original straight fit. All-American style. A blank canvas for self-expression.',
+    image_url: 'https://images.unsplash.com/photo-1542272617-08f08630329e?auto=format&fit=crop&q=80&w=1000',
+    seller_id: 'mock-seller',
+    category: 'Fashion',
+    stock: 50,
+    reviews: []
+  },
+  {
+    id: '9',
+    title: 'Samsonite Omni PC Hardside Expandable Luggage with Spinner Wheels',
+    price: 149.99,
+    description: 'Micro-diamond texture is extremely scratch-resistant, keeping cases beautiful trip after trip. Re-engineered lightweight spinner wheels for effortless mobility.',
+    image_url: 'https://images.unsplash.com/photo-1565026057447-bc90a3a91d98?auto=format&fit=crop&q=80&w=1000',
+    seller_id: 'mock-seller',
+    category: 'Other',
+    stock: 8,
+    reviews: []
   }
 ];
