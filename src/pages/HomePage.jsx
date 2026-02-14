@@ -18,37 +18,30 @@ const HomePage = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      let query = supabase.from('products').select('*');
+      let supabaseData = [];
+      const { data, error } = await supabase.from('products').select('*');
       
-      if (searchQuery) {
-        query = query.ilike('title', `%${searchQuery}%`);
+      if (!error && data) {
+          supabaseData = data;
       }
-      
-      // Note: In a real app, we'd filter by category in Supabase query too
-      // if (selectedCategory !== 'All') query = query.eq('category', selectedCategory);
 
-      const { data, error } = await query;
-      
-      if (error) {
-        console.warn('Supabase fetch error, falling back to mock data:', error);
-        filterMockData();
-      } else {
-        if (!data || data.length === 0) {
-           filterMockData();
-        } else {
-          setProducts(data);
-        }
-      }
+      // Merge Supabase data with Mock data
+      // Assign mock IDs to be distinct if possible, though strings should mock well
+      const allProducts = [...mockProducts, ...supabaseData];
+
+      // Apply Client-Side Filtering to the Unified List
+      filterUnifiedData(allProducts);
+
     } catch (e) {
-      console.warn('Fetch exception, falling back to mock data:', e);
-      filterMockData();
+      console.warn('Fetch exception, falling back to mock data only:', e);
+      filterUnifiedData(mockProducts);
     } finally {
       setLoading(false);
     }
   };
 
-  const filterMockData = () => {
-      let filtered = mockProducts;
+  const filterUnifiedData = (allData) => {
+      let filtered = allData;
       
       if (searchQuery) {
           filtered = filtered.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -58,7 +51,17 @@ const HomePage = () => {
           filtered = filtered.filter(p => p.category === selectedCategory);
       }
       
-      setProducts(filtered);
+      // Remove duplicates if any (based on ID)
+      const unique = [];
+      const seen = new Set();
+      for(const p of filtered) {
+          if (!seen.has(p.id)) {
+              seen.add(p.id);
+              unique.push(p);
+          }
+      }
+
+      setProducts(unique);
   };
 
   const categories = ['All', 'Electronics', 'Gaming', 'Wearables', 'Home', 'Fashion', 'Other'];
