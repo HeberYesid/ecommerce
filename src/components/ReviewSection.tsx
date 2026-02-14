@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import StarRating from './StarRating';
 import { useAuth } from '../context/AuthContext';
-import { supabase } from '../lib/supabase';
 import type { Review } from '../types';
 
 interface ReviewSectionProps {
