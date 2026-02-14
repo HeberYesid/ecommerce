@@ -69,12 +69,30 @@ const ProductDetails = () => {
       <div className="product-info-full">
         <h1>{product.title}</h1>
         <p className="price">${product.price}</p>
+        
+        {/* Stock Status */}
+        <div style={{ margin: '10px 0', fontSize: '14px' }}>
+            {product.stock > 10 ? (
+                <span style={{ color: '#007600', fontWeight: 'bold' }}>In Stock.</span>
+            ) : product.stock > 0 ? (
+                <span style={{ color: '#B12704', fontWeight: 'bold' }}>Only {product.stock} left in stock - order soon.</span>
+            ) : (
+                <span style={{ color: '#B12704', fontWeight: 'bold', fontSize: '16px' }}>Currently unavailable.</span>
+            )}
+        </div>
+
         <p className="description">{product.description}</p>
         
         <div className="action-buttons" style={{display: 'flex', gap: '10px'}}>
-            <button onClick={() => addToCart(product)} className="add-to-cart-btn-large" style={{flex: 1}}>
-              Add to Cart
-            </button>
+            {product.stock > 0 ? (
+                <button onClick={() => addToCart(product)} className="add-to-cart-btn-large" style={{flex: 1}}>
+                  Add to Cart
+                </button>
+            ) : (
+                <button disabled className="add-to-cart-btn-large" style={{flex: 1, background: '#ddd', border: '1px solid #ccc', cursor: 'not-allowed', color: '#555'}}>
+                  Out of Stock
+                </button>
+            )}
             <button 
                 onClick={() => isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product)}
                 style={{

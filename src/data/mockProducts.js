@@ -7,6 +7,7 @@ export const mockProducts = [
     image_url: 'https://m.media-amazon.com/images/I/71ZOtNdaZCL._AC_SL1000_.jpg',
     seller_id: 'mock-seller',
     category: 'Electronics',
+    stock: 5,
     reviews: [
       { id: 'r1', user: 'TechLover', rating: 5, comment: 'Amazing sound for such a small device!', date: '2023-10-15' },
       { id: 'r2', user: 'AudioFan', rating: 4, comment: 'Good value, but bass could be better.', date: '2023-11-02' }
@@ -20,6 +21,7 @@ export const mockProducts = [
     image_url: 'https://m.media-amazon.com/images/I/61SUj2aKoEL._AC_SL1500_.jpg',
     seller_id: 'mock-seller',
     category: 'Electronics',
+    stock: 2,
     reviews: [
       { id: 'r3', user: 'MusicJunkie', rating: 5, comment: 'Best noise cancellation ever.', date: '2023-09-20' },
       { id: 'r4', user: 'RunningMan', rating: 5, comment: 'Stays in ears perfectly during runs.', date: '2023-10-05' },
@@ -34,6 +36,7 @@ export const mockProducts = [
     image_url: 'https://m.media-amazon.com/images/I/61ZjlBOp+rL._AC_SL1500_.jpg',
     seller_id: 'mock-seller',
     category: 'Gaming',
+    stock: 12,
     reviews: [
       { id: 'r6', user: 'GamerGuy', rating: 5, comment: 'Spider-Man 2 is a masterpiece!', date: '2023-10-25' }
     ]
@@ -46,6 +49,7 @@ export const mockProducts = [
     image_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1000',
     seller_id: 'mock-seller',
     category: 'Electronics',
+    stock: 0,
     reviews: []
   },
   {
@@ -56,6 +60,7 @@ export const mockProducts = [
     image_url: 'https://images.pexels.com/photos/267394/pexels-photo-267394.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     seller_id: 'mock-seller',
     category: 'Wearables',
+    stock: 20,
     reviews: []
   },
   {
@@ -66,6 +71,7 @@ export const mockProducts = [
     image_url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=1000',
     seller_id: 'mock-seller',
     category: 'Electronics',
+    stock: 3,
     reviews: []
   }
 ];
