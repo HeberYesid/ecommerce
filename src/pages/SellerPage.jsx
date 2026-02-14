@@ -16,12 +16,55 @@ const SellerPage = () => {
         return <div style={{textAlign: 'center', marginTop: '50px'}}>Please <a href="/login">sign in</a> to access the Seller Dashboard</div>;
     }
 
+    const [myProducts, setMyProducts] = useState([]);
+
+    React.useEffect(() => {
+        if (user) {
+            fetchMyProducts();
+        }
+    }, [user]);
+
+    const fetchMyProducts = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('products')
+                .select('*')
+                .eq('seller_id', user.id);
+            
+            if (error) throw error;
+            setMyProducts(data || []);
+        } catch (error) {
+            console.error('Error fetching my products:', error);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this product?')) return;
+
+        setLoading(true);
+        try {
+            const { error } = await supabase
+                .from('products')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+            
+            setMyProducts(prev => prev.filter(p => p.id !== id));
+            alert('Product deleted successfully');
+        } catch (error) {
+            alert('Error deleting product: ' + error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const { error } = await supabase.from('products').insert([
+            const { data, error } = await supabase.from('products').insert([
                 {
                     title,
                     price: parseFloat(price),
@@ -29,7 +72,7 @@ const SellerPage = () => {
                     image_url: imageUrl,
                     seller_id: user.id
                 }
-            ]);
+            ]).select();
 
             if (error) throw error;
             alert('Product added successfully!');
@@ -37,6 +80,7 @@ const SellerPage = () => {
             setPrice('');
             setDescription('');
             setImageUrl('');
+            if (data) setMyProducts(prev => [...prev, ...data]);
         } catch (error) {
             alert('Error adding product: ' + error.message);
         } finally {
@@ -48,7 +92,7 @@ const SellerPage = () => {
         <div className="seller-dashboard container" style={{maxWidth: '800px', margin: '40px auto'}}>
             <h1 className="dashboard-title" style={{fontSize: '28px', marginBottom: '20px', borderBottom: '1px solid #ddd', paddingBottom: '10px'}}>Seller Dashboard</h1>
             
-            <div className="add-product-form" style={{background: '#fcfcfc', border: '1px solid #ddd', padding: '20px', borderRadius: '4px'}}>
+            <div className="add-product-form" style={{background: '#fcfcfc', border: '1px solid #ddd', padding: '20px', borderRadius: '4px', marginBottom: '40px'}}>
                 <h2 style={{fontSize: '20px', marginBottom: '15px'}}>Add a New Product</h2>
                 <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
                     <div>
@@ -111,9 +155,43 @@ const SellerPage = () => {
                             fontWeight: 'bold'
                         }}
                     >
-                        {loading ? 'Adding Product...' : 'Add Product'}
+                        {loading ? 'Processing...' : 'Add Product'}
                     </button>
                 </form>
+            </div>
+
+            {/* My Products List */}
+            <div className="my-products-list">
+                <h2 style={{fontSize: '24px', marginBottom: '20px', borderBottom: '1px solid #ddd', paddingBottom: '10px'}}>Your Listings</h2>
+                {myProducts.length === 0 ? (
+                    <p>No products listed yet.</p>
+                ) : (
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
+                        {myProducts.map(product => (
+                            <div key={product.id} style={{display: 'flex', gap: '20px', padding: '15px', border: '1px solid #eee', background: 'white', borderRadius: '5px', alignItems: 'center'}}>
+                                <img src={product.image_url} alt={product.title} style={{width: '80px', height: '80px', objectFit: 'contain'}} />
+                                <div style={{flexGrow: 1}}>
+                                    <h3 style={{fontSize: '16px', margin: '0 0 5px 0'}}>{product.title}</h3>
+                                    <p style={{fontWeight: 'bold', color: '#B12704'}}>${product.price}</p>
+                                </div>
+                                <button 
+                                    onClick={() => handleDelete(product.id)}
+                                    style={{
+                                        background: 'white',
+                                        border: '1px solid #D5D9D9',
+                                        padding: '5px 10px',
+                                        borderRadius: '5px',
+                                        color: '#d11',
+                                        cursor: 'pointer',
+                                        boxShadow: '0 2px 5px rgba(215,215,215, 0.5)'
+                                    }}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
