@@ -10,6 +10,13 @@ export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Derive role from user metadata: 'customer' | 'seller' | null
+  const userRole = user?.user_metadata?.role || null;
+
+  const isCustomer = userRole === 'customer';
+  const isSeller = userRole === 'seller';
+  const isLoggedIn = !!user;
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -31,6 +38,10 @@ export const AuthProvider = ({ children }) => {
   const value = {
     session,
     user,
+    userRole,
+    isCustomer,
+    isSeller,
+    isLoggedIn,
     signOut: () => supabase.auth.signOut(),
     loading
   };

@@ -1,11 +1,30 @@
 import React from 'react';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
-import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { Link, Navigate } from 'react-router-dom';
 
 const WishlistPage = () => {
     const { wishlist, removeFromWishlist } = useWishlist();
     const { addToCart } = useCart();
+    const { isCustomer, isLoggedIn } = useAuth();
+
+    // Only customers can access the wishlist
+    if (!isLoggedIn) {
+        return <Navigate to="/login" replace />;
+    }
+
+    if (!isCustomer) {
+        return (
+            <div className="container" style={{padding: '40px', textAlign: 'center'}}>
+                <h2>Access Restricted</h2>
+                <p style={{marginTop: '10px', color: 'var(--text-secondary)'}}>
+                    The wishlist is only available for customer accounts.
+                </p>
+                <Link to="/" style={{color: 'var(--accent-link)', marginTop: '15px', display: 'inline-block'}}>Go to Home</Link>
+            </div>
+        );
+    }
 
     if (wishlist.length === 0) {
         return (

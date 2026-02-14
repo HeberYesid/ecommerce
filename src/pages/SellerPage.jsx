@@ -1,22 +1,38 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 const SellerPage = () => {
-    const { user } = useAuth();
-    const navigate = useNavigate();
+    const { user, isSeller, isLoggedIn } = useAuth();
+
+    // Redirect visitors to login
+    if (!isLoggedIn) {
+        return <Navigate to="/login" replace />;
+    }
+
+    // Block non-sellers
+    if (!isSeller) {
+        return (
+            <div className="container" style={{padding: '40px', textAlign: 'center'}}>
+                <h2>Access Restricted</h2>
+                <p style={{marginTop: '10px', color: 'var(--text-secondary)'}}>
+                    The Seller Dashboard is only available for seller accounts.
+                </p>
+                <p style={{marginTop: '5px', color: 'var(--text-secondary)', fontSize: '13px'}}>
+                    If you want to sell products, please create a new account with the seller role.
+                </p>
+                <Link to="/" style={{color: 'var(--accent-link)', marginTop: '15px', display: 'inline-block'}}>Go to Home</Link>
+            </div>
+        );
+    }
+
     const [title, setTitle] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [category, setCategory] = useState('Electronics');
     const [loading, setLoading] = useState(false);
-
-    if (!user) {
-        return <div className="container" style={{textAlign: 'center', marginTop: '50px'}}>Please <a href="/login">sign in</a> to access the Seller Dashboard</div>;
-    }
-
     const [myProducts, setMyProducts] = useState([]);
 
     React.useEffect(() => {
@@ -93,7 +109,12 @@ const SellerPage = () => {
 
     return (
         <div className="seller-dashboard container">
-            <h1 style={{fontSize: '24px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px'}}>Seller Dashboard</h1>
+            <h1 style={{fontSize: '24px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px'}}>
+                📦 Seller Dashboard
+                <span style={{fontSize: '13px', fontWeight: 'normal', marginLeft: '10px', color: 'var(--text-secondary)'}}>
+                    ({user.email})
+                </span>
+            </h1>
             
             <div style={{background: 'var(--surface-tertiary)', border: '1px solid var(--border-color)', padding: '20px', borderRadius: '4px', marginBottom: '40px'}}>
                 <h2 style={{fontSize: '20px', marginBottom: '15px'}}>Add a New Product</h2>
@@ -191,7 +212,7 @@ const SellerPage = () => {
             <div>
                 <h2 style={{fontSize: '22px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px'}}>Your Listings</h2>
                 {myProducts.length === 0 ? (
-                    <p>No products listed yet.</p>
+                    <p style={{color: 'var(--text-secondary)'}}>No products listed yet. Add your first product above!</p>
                 ) : (
                     <div style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
                         {myProducts.map(product => (
@@ -200,6 +221,7 @@ const SellerPage = () => {
                                 <div style={{flexGrow: 1, minWidth: 0}}>
                                     <h3 style={{fontSize: '16px', margin: '0 0 5px 0', wordBreak: 'break-word'}}>{product.title}</h3>
                                     <p style={{fontWeight: 'bold', color: 'var(--price-color)'}}>${product.price}</p>
+                                    <p style={{fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px'}}>{product.category}</p>
                                 </div>
                                 <button 
                                     onClick={() => handleDelete(product.id)}

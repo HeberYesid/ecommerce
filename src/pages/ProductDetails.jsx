@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '../context/WishlistContext';
 
@@ -11,7 +12,9 @@ import ReviewSection from '../components/ReviewSection';
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { isCustomer, isLoggedIn } = useAuth();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const isWishlisted = isInWishlist(id);
   const [product, setProduct] = useState(null);
@@ -57,6 +60,26 @@ const ProductDetails = () => {
     setReviews(prev => [...prev, newReview]);
   };
 
+  const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+    if (isCustomer) {
+      addToCart(product);
+    }
+  };
+
+  const handleWishlistToggle = () => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+    if (isCustomer) {
+      isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product);
+    }
+  };
+
   if (loading) return <div className="container">Loading...</div>;
   if (!product) return <div className="container">Product not found!</div>;
 
@@ -82,33 +105,46 @@ const ProductDetails = () => {
 
         <p style={{margin: '15px 0', lineHeight: 1.6}}>{product.description}</p>
         
+        {/* Action buttons — only for customers */}
         <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
-            {product.stock > 0 ? (
-                <button onClick={() => addToCart(product)} className="add-to-cart-btn" style={{flex: '1 1 200px', maxWidth: '300px'}}>
-                  Add to Cart
+            {isCustomer ? (
+                <>
+                    {product.stock > 0 ? (
+                        <button onClick={handleAddToCart} className="add-to-cart-btn" style={{flex: '1 1 200px', maxWidth: '300px'}}>
+                          Add to Cart
+                        </button>
+                    ) : (
+                        <button disabled style={{flex: '1 1 200px', maxWidth: '300px', background: 'var(--surface-secondary)', border: '1px solid var(--border-color)', cursor: 'not-allowed', color: 'var(--text-secondary)', borderRadius: '20px', padding: '8px'}}>
+                          Out of Stock
+                        </button>
+                    )}
+                    <button 
+                        onClick={handleWishlistToggle}
+                        style={{
+                            background: 'var(--surface-primary)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '20px',
+                            padding: '8px 15px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0
+                        }}
+                        title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+                    >
+                        <Heart fill={isWishlisted ? "var(--price-color)" : "none"} color={isWishlisted ? "var(--price-color)" : "var(--text-primary)"} />
+                    </button>
+                </>
+            ) : !isLoggedIn ? (
+                <button 
+                    onClick={() => navigate('/login')} 
+                    className="add-to-cart-btn" 
+                    style={{flex: '1 1 200px', maxWidth: '300px', background: 'var(--surface-secondary)', color: 'var(--text-secondary)', border: '1px solid var(--border-color)'}}
+                >
+                    Sign in to buy
                 </button>
-            ) : (
-                <button disabled style={{flex: '1 1 200px', maxWidth: '300px', background: 'var(--surface-secondary)', border: '1px solid var(--border-color)', cursor: 'not-allowed', color: 'var(--text-secondary)', borderRadius: '20px', padding: '8px'}}>
-                  Out of Stock
-                </button>
-            )}
-            <button 
-                onClick={() => isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product)}
-                style={{
-                    background: 'var(--surface-primary)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: '20px',
-                    padding: '8px 15px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                }}
-                title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
-            >
-                <Heart fill={isWishlisted ? "var(--price-color)" : "none"} color={isWishlisted ? "var(--price-color)" : "var(--text-primary)"} />
-            </button>
+            ) : null}
         </div>
         
         <ReviewSection productId={id} reviews={reviews} onReviewAdded={handleReviewAdded} />

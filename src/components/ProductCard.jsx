@@ -1,12 +1,24 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { Plus } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const { isCustomer, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
   const { id, title, price, image_url } = product;
   const currency = '$';
+
+  const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+    if (isCustomer) {
+      addToCart(product);
+    }
+  };
 
   return (
     <div className="product-card">
@@ -21,7 +33,19 @@ const ProductCard = ({ product }) => {
           <span className="currency-symbol">{currency}</span>
           <span className="currency-fraction">{price.toFixed(2)}</span>
         </div>
-        <button className="add-to-cart-btn" onClick={() => addToCart(product)}>Add to Cart</button>
+        
+        {/* Only customers can add to cart. Visitors see "Sign in to buy". Sellers don't see the button. */}
+        {isCustomer ? (
+          <button className="add-to-cart-btn" onClick={handleAddToCart}>Add to Cart</button>
+        ) : !isLoggedIn ? (
+          <button 
+            className="add-to-cart-btn" 
+            onClick={() => navigate('/login')}
+            style={{background: 'var(--surface-secondary)', color: 'var(--text-secondary)', border: '1px solid var(--border-color)'}}
+          >
+            Sign in to buy
+          </button>
+        ) : null}
       </div>
     </div>
   );

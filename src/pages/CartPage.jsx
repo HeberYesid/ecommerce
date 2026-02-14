@@ -1,11 +1,29 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { Link, Navigate } from 'react-router-dom';
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, totalPrice, clearCart } = useCart();
-  const { user } = useAuth();
+  const { isCustomer, isLoggedIn } = useAuth();
   const [phoneNumber, setPhoneNumber] = useState('+1234567890');
+
+  // Only customers can access the cart
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!isCustomer) {
+    return (
+      <div className="container" style={{padding: '40px', textAlign: 'center'}}>
+        <h2>Access Restricted</h2>
+        <p style={{marginTop: '10px', color: 'var(--text-secondary)'}}>
+          The cart is only available for customer accounts.
+        </p>
+        <Link to="/" style={{color: 'var(--accent-link)', marginTop: '15px', display: 'inline-block'}}>Go to Home</Link>
+      </div>
+    );
+  }
 
   const checkoutViaWhatsApp = () => {
     if (cart.length === 0) return;
