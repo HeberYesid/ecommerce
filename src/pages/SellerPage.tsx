@@ -1,10 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { Link, Navigate } from 'react-router-dom';
+import type { Product } from '../types';
 
-const SellerPage = () => {
+const SellerPage: React.FC = () => {
     const { user, isSeller, isLoggedIn } = useAuth();
+
+    const [title, setTitle] = useState('');
+    const [price, setPrice] = useState('');
+    const [description, setDescription] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
+    const [category, setCategory] = useState('Electronics');
+    const [loading, setLoading] = useState(false);
+    const [myProducts, setMyProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        if (user && isSeller) {
+            fetchMyProducts();
+        }
+    }, [user, isSeller]);
 
     // Redirect visitors to login
     if (!isLoggedIn) {
@@ -27,35 +42,21 @@ const SellerPage = () => {
         );
     }
 
-    const [title, setTitle] = useState('');
-    const [price, setPrice] = useState('');
-    const [description, setDescription] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
-    const [category, setCategory] = useState('Electronics');
-    const [loading, setLoading] = useState(false);
-    const [myProducts, setMyProducts] = useState([]);
-
-    React.useEffect(() => {
-        if (user) {
-            fetchMyProducts();
-        }
-    }, [user]);
-
     const fetchMyProducts = async () => {
         try {
             const { data, error } = await supabase
                 .from('products')
                 .select('*')
-                .eq('seller_id', user.id);
+                .eq('seller_id', user!.id);
             
             if (error) throw error;
-            setMyProducts(data || []);
+            setMyProducts((data as Product[]) || []);
         } catch (error) {
             console.error('Error fetching my products:', error);
         }
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id: string) => {
         if (!window.confirm('Are you sure you want to delete this product?')) return;
 
         setLoading(true);
@@ -69,14 +70,14 @@ const SellerPage = () => {
             
             setMyProducts(prev => prev.filter(p => p.id !== id));
             alert('Product deleted successfully');
-        } catch (error) {
+        } catch (error: any) {
             alert('Error deleting product: ' + error.message);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
@@ -88,7 +89,7 @@ const SellerPage = () => {
                     description,
                     image_url: imageUrl,
                     category,
-                    seller_id: user.id
+                    seller_id: user!.id
                 }
             ]).select();
 
@@ -99,8 +100,8 @@ const SellerPage = () => {
             setDescription('');
             setImageUrl('');
             setCategory('Electronics');
-            if (data) setMyProducts(prev => [...prev, ...data]);
-        } catch (error) {
+            if (data) setMyProducts(prev => [...prev, ...(data as Product[])]);
+        } catch (error: any) {
             alert('Error adding product: ' + error.message);
         } finally {
             setLoading(false);
@@ -112,7 +113,7 @@ const SellerPage = () => {
             <h1 style={{fontSize: '24px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px'}}>
                 📦 Seller Dashboard
                 <span style={{fontSize: '13px', fontWeight: 'normal', marginLeft: '10px', color: 'var(--text-secondary)'}}>
-                    ({user.email})
+                    ({user?.email})
                 </span>
             </h1>
             
@@ -182,7 +183,7 @@ const SellerPage = () => {
                         <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Description</label>
                         <textarea 
                             required 
-                            rows="4" 
+                            rows={4} 
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             style={{width: '100%', padding: '8px', border: '1px solid var(--input-border)', borderRadius: '3px', resize: 'vertical', background: 'var(--input-bg)', color: 'var(--text-primary)'}}
@@ -208,7 +209,6 @@ const SellerPage = () => {
                 </form>
             </div>
 
-            {/* My Products List */}
             <div>
                 <h2 style={{fontSize: '22px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px'}}>Your Listings</h2>
                 {myProducts.length === 0 ? (

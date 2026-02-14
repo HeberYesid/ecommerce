@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import ProductCard from '../components/ProductCard';
 import { useSearchParams } from 'react-router-dom';
-import { mockProducts } from '../data/mockProducts.js';
+import { mockProducts } from '../data/mockProducts';
+import type { Product } from '../types';
 
-const HomePage = () => {
-  const [products, setProducts] = useState([]);
+const HomePage: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
@@ -18,11 +19,11 @@ const HomePage = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      let supabaseData = [];
+      let supabaseData: Product[] = [];
       const { data, error } = await supabase.from('products').select('*');
       
       if (!error && data) {
-          supabaseData = data;
+          supabaseData = data as Product[];
       }
 
       const allProducts = [...mockProducts, ...supabaseData];
@@ -36,7 +37,7 @@ const HomePage = () => {
     }
   };
 
-  const filterUnifiedData = (allData) => {
+  const filterUnifiedData = (allData: Product[]) => {
       let filtered = allData;
       
       if (searchQuery) {
@@ -47,9 +48,9 @@ const HomePage = () => {
           filtered = filtered.filter(p => p.category === selectedCategory);
       }
       
-      const unique = [];
-      const seen = new Set();
-      for(const p of filtered) {
+      const unique: Product[] = [];
+      const seen = new Set<string>();
+      for (const p of filtered) {
           if (!seen.has(p.id)) {
               seen.add(p.id);
               unique.push(p);
@@ -61,7 +62,7 @@ const HomePage = () => {
 
   const categories = ['All', 'Electronics', 'Gaming', 'Wearables', 'Home', 'Fashion', 'Other'];
 
-  const handleCategoryChange = (category) => {
+  const handleCategoryChange = (category: string) => {
       const newParams = new URLSearchParams(searchParams);
       if (category === 'All') {
           newParams.delete('category');
@@ -75,8 +76,6 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      
-      {/* Sidebar Filters */}
       <aside className="filters-sidebar">
         <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>Department</h3>
         <ul style={{ listStyle: 'none' }}>
@@ -112,7 +111,6 @@ const HomePage = () => {
         </div>
       </aside>
 
-      {/* Product Grid */}
       <div className="product-list-container">
         <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '15px' }}>Results</h2>
         <div className="product-grid">

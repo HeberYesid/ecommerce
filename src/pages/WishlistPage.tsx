@@ -4,12 +4,11 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Link, Navigate } from 'react-router-dom';
 
-const WishlistPage = () => {
+const WishlistPage: React.FC = () => {
     const { wishlist, removeFromWishlist } = useWishlist();
     const { addToCart } = useCart();
     const { isCustomer, isLoggedIn } = useAuth();
 
-    // Only customers can access the wishlist
     if (!isLoggedIn) {
         return <Navigate to="/login" replace />;
     }

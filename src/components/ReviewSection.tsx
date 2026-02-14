@@ -2,8 +2,15 @@ import React, { useState } from 'react';
 import StarRating from './StarRating';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
+import type { Review } from '../types';
 
-const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
+interface ReviewSectionProps {
+  productId: string;
+  reviews: Review[];
+  onReviewAdded: (review: Review) => void;
+}
+
+const ReviewSection: React.FC<ReviewSectionProps> = ({ productId, reviews, onReviewAdded }) => {
   const { user } = useAuth();
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
@@ -11,17 +18,17 @@ const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
 
   const averageRating = reviews && reviews.length > 0 
     ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) 
-    : 0;
+    : '0';
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return alert('Please sign in to write a review.');
     
     setSubmitting(true);
     
     try {
-      const newReview = {
-        id: Date.now(),
+      const newReview: Review = {
+        id: Date.now().toString(),
         user: user.email?.split('@')[0] || 'User',
         rating,
         comment,
@@ -44,7 +51,7 @@ const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
       <h2 style={{ fontSize: '24px', fontWeight: 'bold' }}>Customer Reviews</h2>
       
       <div className="rating-summary" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
-        <StarRating rating={Math.round(averageRating)} size={24} />
+        <StarRating rating={Math.round(Number(averageRating))} size={24} />
         <span style={{ fontSize: '18px' }}>{averageRating} out of 5</span>
         <span style={{ color: 'var(--text-secondary)' }}>({reviews ? reviews.length : 0} global ratings)</span>
       </div>
@@ -91,7 +98,7 @@ const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
             <div style={{ marginBottom: '10px' }}>
               <label style={{ display: 'block', marginBottom: '5px' }}>Add a written review</label>
               <textarea 
-                rows="4" 
+                rows={4} 
                 style={{ width: '100%', padding: '10px', background: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)', borderRadius: '4px' }} 
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
@@ -101,7 +108,6 @@ const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
             </div>
             <button 
               type="submit" 
-              className="a-button-primary"
               disabled={submitting}
               style={{
                 background: 'var(--btn-primary)', 

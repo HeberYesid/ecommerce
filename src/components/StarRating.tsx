@@ -1,7 +1,12 @@
 import React from 'react';
 import { Star } from 'lucide-react';
 
-const StarRating = ({ rating, size = 16 }) => {
+interface StarRatingProps {
+  rating: number;
+  size?: number;
+}
+
+const StarRating: React.FC<StarRatingProps> = ({ rating, size = 16 }) => {
   return (
     <div style={{ display: 'flex' }}>
       {[1, 2, 3, 4, 5].map((star) => (

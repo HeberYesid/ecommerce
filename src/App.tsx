@@ -1,16 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar.jsx';
-import HomePage from './pages/HomePage.jsx';
-import ProductDetails from './pages/ProductDetails.jsx';
-import CartPage from './pages/CartPage.jsx';
-import WishlistPage from './pages/WishlistPage.jsx';
-import LoginPage from './pages/LoginPage.jsx';
-import SellerPage from './pages/SellerPage.jsx';
-import { AuthProvider } from './context/AuthContext.jsx';
-import { CartProvider } from './context/CartContext.jsx';
-import { WishlistProvider } from './context/WishlistContext.jsx';
-import { ThemeProvider } from './context/ThemeContext.jsx';
+import Navbar from './components/Navbar';
+import HomePage from './pages/HomePage';
+import ProductDetails from './pages/ProductDetails';
+import CartPage from './pages/CartPage';
+import WishlistPage from './pages/WishlistPage';
+import LoginPage from './pages/LoginPage';
+import SellerPage from './pages/SellerPage';
+import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+import { WishlistProvider } from './context/WishlistContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   return (

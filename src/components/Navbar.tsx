@@ -5,14 +5,14 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
     const { user, signOut, isCustomer, isSeller, isLoggedIn } = useAuth();
     const { cart } = useCart();
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
 
-    const handleSearch = (e) => {
+    const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         navigate(`/?search=${searchTerm}`);
     };
@@ -39,7 +39,6 @@ const Navbar = () => {
             </form>
 
             <div className="nav-links">
-                {/* Theme Toggle */}
                 <button 
                     className="theme-toggle" 
                     onClick={toggleTheme} 
@@ -50,24 +49,21 @@ const Navbar = () => {
 
                 {isLoggedIn ? (
                     <>
-                        {/* Seller-specific: Dashboard link */}
                         {isSeller && (
                             <div className="nav-item" onClick={() => navigate('/seller')}>
-                                <span style={{fontSize: '11px', fontWeight: 'normal'}}>Hello, {user.email?.split('@')[0]}</span>
+                                <span style={{fontSize: '11px', fontWeight: 'normal'}}>Hello, {user?.email?.split('@')[0]}</span>
                                 <span><Package size={12} style={{marginRight: '3px', verticalAlign: 'middle'}} />Seller</span>
                             </div>
                         )}
 
-                        {/* Customer-specific: show name */}
                         {isCustomer && (
                             <div className="nav-item" style={{cursor: 'default'}}>
-                                <span style={{fontSize: '11px', fontWeight: 'normal'}}>Hello, {user.email?.split('@')[0]}</span>
+                                <span style={{fontSize: '11px', fontWeight: 'normal'}}>Hello, {user?.email?.split('@')[0]}</span>
                                 <span>Client</span>
                             </div>
                         )}
 
-                        {/* Sign out - all logged-in users */}
-                        <div className="nav-item" onClick={signOut} title="Sign Out">
+                        <div className="nav-item" onClick={() => { signOut(); }} title="Sign Out">
                             <LogOut size={18} />
                             <span style={{fontSize: '11px'}}>Out</span>
                         </div>
@@ -79,7 +75,6 @@ const Navbar = () => {
                     </Link>
                 )}
 
-                {/* Wishlist - only for customers */}
                 {isCustomer && (
                     <Link to="/wishlist" className="nav-item">
                         <span style={{fontSize: '11px', fontWeight: 'normal'}}>Your</span>
@@ -87,7 +82,6 @@ const Navbar = () => {
                     </Link>
                 )}
 
-                {/* Cart - only for customers */}
                 {isCustomer && (
                     <Link to="/cart" className="nav-item" style={{flexDirection: 'row', alignItems: 'center', gap: '4px'}}>
                         <div style={{position: 'relative'}}>

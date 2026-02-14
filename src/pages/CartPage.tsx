@@ -3,12 +3,11 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Link, Navigate } from 'react-router-dom';
 
-const CartPage = () => {
+const CartPage: React.FC = () => {
   const { cart, removeFromCart, updateQuantity, totalPrice, clearCart } = useCart();
   const { isCustomer, isLoggedIn } = useAuth();
-  const [phoneNumber, setPhoneNumber] = useState('+1234567890');
+  const [phoneNumber] = useState('+1234567890');
 
-  // Only customers can access the cart
   if (!isLoggedIn) {
     return <Navigate to="/login" replace />;
   }

@@ -2,8 +2,13 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import type { Product } from '../types';
 
-const ProductCard = ({ product }) => {
+interface ProductCardProps {
+  product: Product;
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
   const { isCustomer, isLoggedIn } = useAuth();
   const navigate = useNavigate();
@@ -34,7 +39,6 @@ const ProductCard = ({ product }) => {
           <span className="currency-fraction">{price.toFixed(2)}</span>
         </div>
         
-        {/* Only customers can add to cart. Visitors see "Sign in to buy". Sellers don't see the button. */}
         {isCustomer ? (
           <button className="add-to-cart-btn" onClick={handleAddToCart}>Add to Cart</button>
         ) : !isLoggedIn ? (

@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 
-const LoginPage = () => {
+const LoginPage: React.FC = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLogin, setIsLogin] = useState(true);
-    const [role, setRole] = useState('customer');
+    const [role, setRole] = useState<'customer' | 'seller'>('customer');
 
-    const handleAuth = async (e) => {
+    const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         try {
@@ -30,7 +30,7 @@ const LoginPage = () => {
                 if (error) throw error;
             }
             navigate('/');
-        } catch (error) {
+        } catch (error: any) {
             alert(error.error_description || error.message);
         } finally {
             setLoading(false);
@@ -76,7 +76,6 @@ const LoginPage = () => {
                     />
                 </div>
 
-                {/* Role selector — only shown when creating a new account */}
                 {!isLogin && (
                     <div style={{marginBottom: '15px'}}>
                         <label style={{fontWeight: 'bold', fontSize: '12px', display: 'block', marginBottom: '8px'}}>I want to register as:</label>

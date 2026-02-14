@@ -5,20 +5,19 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '../context/WishlistContext';
-
-import { mockProducts } from '../data/mockProducts.js';
-
+import { mockProducts } from '../data/mockProducts';
 import ReviewSection from '../components/ReviewSection';
+import type { Product, Review } from '../types';
 
-const ProductDetails = () => {
-  const { id } = useParams();
+const ProductDetails: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { isCustomer, isLoggedIn } = useAuth();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-  const isWishlisted = isInWishlist(id);
-  const [product, setProduct] = useState(null);
-  const [reviews, setReviews] = useState([]);
+  const isWishlisted = isInWishlist(id || '');
+  const [product, setProduct] = useState<Product | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,6 +25,7 @@ const ProductDetails = () => {
   }, [id]);
 
   const fetchProduct = async () => {
+    if (!id) return;
     try {
       const { data, error } = await supabase
         .from('products')
@@ -41,7 +41,7 @@ const ProductDetails = () => {
             setReviews(mock.reviews || []);
         }
       } else {
-        setProduct(data);
+        setProduct(data as Product);
         setReviews([]); 
       }
     } catch (e) {
@@ -56,7 +56,7 @@ const ProductDetails = () => {
     }
   };
 
-  const handleReviewAdded = (newReview) => {
+  const handleReviewAdded = (newReview: Review) => {
     setReviews(prev => [...prev, newReview]);
   };
 
@@ -65,7 +65,7 @@ const ProductDetails = () => {
       navigate('/login');
       return;
     }
-    if (isCustomer) {
+    if (isCustomer && product) {
       addToCart(product);
     }
   };
@@ -75,7 +75,7 @@ const ProductDetails = () => {
       navigate('/login');
       return;
     }
-    if (isCustomer) {
+    if (isCustomer && product) {
       isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product);
     }
   };
@@ -92,7 +92,6 @@ const ProductDetails = () => {
         <h1 style={{fontSize: '22px', lineHeight: 1.3}}>{product.title}</h1>
         <p style={{fontSize: '24px', fontWeight: 'bold', margin: '10px 0'}}>${product.price}</p>
         
-        {/* Stock Status */}
         <div style={{ margin: '10px 0', fontSize: '14px' }}>
             {product.stock > 10 ? (
                 <span style={{ color: 'var(--stock-ok)', fontWeight: 'bold' }}>In Stock.</span>
@@ -105,7 +104,6 @@ const ProductDetails = () => {
 
         <p style={{margin: '15px 0', lineHeight: 1.6}}>{product.description}</p>
         
-        {/* Action buttons — only for customers */}
         <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
             {isCustomer ? (
                 <>
@@ -147,7 +145,7 @@ const ProductDetails = () => {
             ) : null}
         </div>
         
-        <ReviewSection productId={id} reviews={reviews} onReviewAdded={handleReviewAdded} />
+        <ReviewSection productId={id || ''} reviews={reviews} onReviewAdded={handleReviewAdded} />
       </div>
     </div>
   );

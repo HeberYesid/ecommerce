@@ -1,4 +1,6 @@
-export const mockProducts = [
+import type { Product } from '../types';
+
+export const mockProducts: Product[] = [
   {
     id: '1',
     title: 'Echo Dot (5th Gen, 2022 release) | With bigger vibrant sound, helpful routines and Alexa | Charcoal',
@@ -30,7 +32,7 @@ export const mockProducts = [
   },
   {
     id: '3',
-    title: 'PlayStation 5 Console (PS5) - Marvel\'s Spider-Man 2 Bundle',
+    title: "PlayStation 5 Console (PS5) - Marvel's Spider-Man 2 Bundle",
     price: 499.00,
     description: 'Experience lightning fast loading with an ultra-high speed SSD, deeper immersion with support for haptic feedback, adaptive triggers, and 3D Audio.',
     image_url: 'https://m.media-amazon.com/images/I/61ZjlBOp+rL._AC_SL1500_.jpg',
@@ -45,7 +47,7 @@ export const mockProducts = [
     id: '4',
     title: 'Kindle Paperwhite (16 GB) – Now with a 6.8" display and adjustable warm light',
     price: 139.99,
-    description: 'All-new Kindle Paperwhite – Now with a 6.8” display and thinner borders, adjustable warm light, up to 10 weeks of battery life, and 20% faster turns.',
+    description: 'All-new Kindle Paperwhite – Now with a 6.8" display and thinner borders, adjustable warm light, up to 10 weeks of battery life, and 20% faster turns.',
     image_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1000',
     seller_id: 'mock-seller',
     category: 'Electronics',
@@ -87,7 +89,7 @@ export const mockProducts = [
   },
   {
     id: '8',
-    title: 'Levi\'s Men\'s 501 Original Fit Jeans',
+    title: "Levi's Men's 501 Original Fit Jeans",
     price: 69.50,
     description: 'The original blue jean since 1873. Original straight fit. All-American style. A blank canvas for self-expression.',
     image_url: 'https://http2.mlstatic.com/D_NQ_NP_812753-MCO49170292145_022022-O.webp',
