@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ShoppingCart, User, LogOut } from 'lucide-react';
+import { Search, ShoppingCart, LogOut, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useTheme } from '../context/ThemeContext';
 
 const Navbar = () => {
     const { user, signOut } = useAuth();
     const { cart } = useCart();
+    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -37,6 +39,15 @@ const Navbar = () => {
             </form>
 
             <div className="nav-links">
+                {/* Theme Toggle */}
+                <button 
+                    className="theme-toggle" 
+                    onClick={toggleTheme} 
+                    title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+                >
+                    {theme === 'light' ? <Moon size={22} /> : <Sun size={22} />}
+                </button>
+
                 {user ? (
                     <div className="nav-container">
                         <div className="nav-item_row" style={{display: 'flex', gap: '10px', alignItems: 'center'}}>

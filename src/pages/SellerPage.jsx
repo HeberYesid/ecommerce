@@ -93,9 +93,9 @@ const SellerPage = () => {
 
     return (
         <div className="seller-dashboard container" style={{maxWidth: '800px', margin: '40px auto'}}>
-            <h1 className="dashboard-title" style={{fontSize: '28px', marginBottom: '20px', borderBottom: '1px solid #ddd', paddingBottom: '10px'}}>Seller Dashboard</h1>
+            <h1 className="dashboard-title" style={{fontSize: '28px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px'}}>Seller Dashboard</h1>
             
-            <div className="add-product-form" style={{background: '#fcfcfc', border: '1px solid #ddd', padding: '20px', borderRadius: '4px', marginBottom: '40px'}}>
+            <div className="add-product-form" style={{background: 'var(--surface-tertiary)', border: '1px solid var(--border-color)', padding: '20px', borderRadius: '4px', marginBottom: '40px'}}>
                 <h2 style={{fontSize: '20px', marginBottom: '15px'}}>Add a New Product</h2>
                 <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
                     <div>
@@ -105,7 +105,7 @@ const SellerPage = () => {
                             required 
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            style={{width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '3px'}}
+                            style={{width: '100%', padding: '8px', border: '1px solid var(--input-border)', borderRadius: '3px', background: 'var(--input-bg)', color: 'var(--text-primary)'}}
                         />
                     </div>
 
@@ -118,7 +118,7 @@ const SellerPage = () => {
                                 required 
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
-                                style={{width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '3px'}}
+                                style={{width: '100%', padding: '8px', border: '1px solid var(--input-border)', borderRadius: '3px', background: 'var(--input-bg)', color: 'var(--text-primary)'}}
                             />
                         </div>
                         <div style={{flex: 1}}>
@@ -129,9 +129,10 @@ const SellerPage = () => {
                                 style={{
                                     width: '100%', 
                                     padding: '8px', 
-                                    border: '1px solid #ccc', 
+                                    border: '1px solid var(--input-border)', 
                                     borderRadius: '3px',
-                                    background: 'white'
+                                    background: 'var(--input-bg)',
+                                    color: 'var(--text-primary)'
                                 }}
                             >
                                 <option value="Electronics">Electronics</option>
@@ -152,7 +153,7 @@ const SellerPage = () => {
                             value={imageUrl}
                             onChange={(e) => setImageUrl(e.target.value)}
                             placeholder="https://example.com/image.jpg"
-                            style={{width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '3px'}}
+                            style={{width: '100%', padding: '8px', border: '1px solid var(--input-border)', borderRadius: '3px', background: 'var(--input-bg)', color: 'var(--text-primary)'}}
                         />
                     </div>
 
@@ -163,7 +164,7 @@ const SellerPage = () => {
                             rows="4" 
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            style={{width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '3px', resize: 'vertical'}}
+                            style={{width: '100%', padding: '8px', border: '1px solid var(--input-border)', borderRadius: '3px', resize: 'vertical', background: 'var(--input-bg)', color: 'var(--text-primary)'}}
                         />
                     </div>
 
@@ -172,12 +173,13 @@ const SellerPage = () => {
                         disabled={loading}
                         style={{
                             alignSelf: 'flex-start',
-                            background: '#f0c14b',
-                            border: '1px solid #a88734',
+                            background: 'var(--login-btn-bg)',
+                            border: '1px solid var(--login-btn-border)',
                             padding: '8px 20px',
                             cursor: 'pointer',
                             borderRadius: '3px',
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
+                            color: '#0f1111'
                         }}
                     >
                         {loading ? 'Processing...' : 'Add Product'}
@@ -187,26 +189,26 @@ const SellerPage = () => {
 
             {/* My Products List */}
             <div className="my-products-list">
-                <h2 style={{fontSize: '24px', marginBottom: '20px', borderBottom: '1px solid #ddd', paddingBottom: '10px'}}>Your Listings</h2>
+                <h2 style={{fontSize: '24px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px'}}>Your Listings</h2>
                 {myProducts.length === 0 ? (
                     <p>No products listed yet.</p>
                 ) : (
                     <div style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
                         {myProducts.map(product => (
-                            <div key={product.id} style={{display: 'flex', gap: '20px', padding: '15px', border: '1px solid #eee', background: 'white', borderRadius: '5px', alignItems: 'center'}}>
+                            <div key={product.id} style={{display: 'flex', gap: '20px', padding: '15px', border: '1px solid var(--border-color)', background: 'var(--surface-primary)', borderRadius: '5px', alignItems: 'center'}}>
                                 <img src={product.image_url} alt={product.title} style={{width: '80px', height: '80px', objectFit: 'contain'}} />
                                 <div style={{flexGrow: 1}}>
                                     <h3 style={{fontSize: '16px', margin: '0 0 5px 0'}}>{product.title}</h3>
-                                    <p style={{fontWeight: 'bold', color: '#B12704'}}>${product.price}</p>
+                                    <p style={{fontWeight: 'bold', color: 'var(--price-color)'}}>${product.price}</p>
                                 </div>
                                 <button 
                                     onClick={() => handleDelete(product.id)}
                                     style={{
-                                        background: 'white',
-                                        border: '1px solid #D5D9D9',
+                                        background: 'var(--surface-primary)',
+                                        border: '1px solid var(--border-color)',
                                         padding: '5px 10px',
                                         borderRadius: '5px',
-                                        color: '#d11',
+                                        color: 'var(--delete-color)',
                                         cursor: 'pointer',
                                         boxShadow: '0 2px 5px rgba(215,215,215, 0.5)'
                                     }}

@@ -25,11 +25,7 @@ const HomePage = () => {
           supabaseData = data;
       }
 
-      // Merge Supabase data with Mock data
-      // Assign mock IDs to be distinct if possible, though strings should mock well
       const allProducts = [...mockProducts, ...supabaseData];
-
-      // Apply Client-Side Filtering to the Unified List
       filterUnifiedData(allProducts);
 
     } catch (e) {
@@ -51,7 +47,6 @@ const HomePage = () => {
           filtered = filtered.filter(p => p.category === selectedCategory);
       }
       
-      // Remove duplicates if any (based on ID)
       const unique = [];
       const seen = new Set();
       for(const p of filtered) {
@@ -82,7 +77,7 @@ const HomePage = () => {
     <div className="home-page" style={{ display: 'flex', gap: '20px' }}>
       
       {/* Sidebar Filters */}
-      <aside className="filters-sidebar" style={{ width: '250px', flexShrink: 0, paddingRight: '20px', borderRight: '1px solid #ddd' }}>
+      <aside className="filters-sidebar" style={{ width: '250px', flexShrink: 0, paddingRight: '20px', borderRight: '1px solid var(--border-color)' }}>
         <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>Department</h3>
         <ul style={{ listStyle: 'none' }}>
             {categories.map(cat => (
@@ -92,7 +87,7 @@ const HomePage = () => {
                         style={{ 
                             background: 'none', 
                             border: 'none', 
-                            color: selectedCategory === cat ? '#C7511F' : '#0F1111', 
+                            color: selectedCategory === cat ? 'var(--category-active)' : 'var(--text-primary)', 
                             fontWeight: selectedCategory === cat ? 'bold' : 'normal',
                             cursor: 'pointer',
                             textAlign: 'left',
@@ -107,10 +102,10 @@ const HomePage = () => {
 
         <div style={{ marginTop: '20px' }}>
             <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '10px' }}>Avg. Customer Review</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '5px', color: '#007185', cursor: 'pointer' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '5px', color: 'var(--accent-link)', cursor: 'pointer' }}>
                 <span>⭐⭐⭐⭐☆</span> & Up
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '5px', color: '#007185', cursor: 'pointer' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '5px', color: 'var(--accent-link)', cursor: 'pointer' }}>
                 <span>⭐⭐⭐☆☆</span> & Up
             </div>
         </div>

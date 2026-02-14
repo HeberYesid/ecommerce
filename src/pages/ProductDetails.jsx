@@ -15,7 +15,7 @@ const ProductDetails = () => {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const isWishlisted = isInWishlist(id);
   const [product, setProduct] = useState(null);
-  const [reviews, setReviews] = useState([]); // Store reviews locally for now
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -39,7 +39,6 @@ const ProductDetails = () => {
         }
       } else {
         setProduct(data);
-        // fetch reviews from Supabase here later
         setReviews([]); 
       }
     } catch (e) {
@@ -73,11 +72,11 @@ const ProductDetails = () => {
         {/* Stock Status */}
         <div style={{ margin: '10px 0', fontSize: '14px' }}>
             {product.stock > 10 ? (
-                <span style={{ color: '#007600', fontWeight: 'bold' }}>In Stock.</span>
+                <span style={{ color: 'var(--stock-ok)', fontWeight: 'bold' }}>In Stock.</span>
             ) : product.stock > 0 ? (
-                <span style={{ color: '#B12704', fontWeight: 'bold' }}>Only {product.stock} left in stock - order soon.</span>
+                <span style={{ color: 'var(--price-color)', fontWeight: 'bold' }}>Only {product.stock} left in stock - order soon.</span>
             ) : (
-                <span style={{ color: '#B12704', fontWeight: 'bold', fontSize: '16px' }}>Currently unavailable.</span>
+                <span style={{ color: 'var(--price-color)', fontWeight: 'bold', fontSize: '16px' }}>Currently unavailable.</span>
             )}
         </div>
 
@@ -89,15 +88,15 @@ const ProductDetails = () => {
                   Add to Cart
                 </button>
             ) : (
-                <button disabled className="add-to-cart-btn-large" style={{flex: 1, background: '#ddd', border: '1px solid #ccc', cursor: 'not-allowed', color: '#555'}}>
+                <button disabled className="add-to-cart-btn-large" style={{flex: 1, background: 'var(--surface-secondary)', border: '1px solid var(--border-color)', cursor: 'not-allowed', color: 'var(--text-secondary)'}}>
                   Out of Stock
                 </button>
             )}
             <button 
                 onClick={() => isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product)}
                 style={{
-                    background: 'white',
-                    border: '1px solid #D5D9D9',
+                    background: 'var(--surface-primary)',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '20px',
                     padding: '8px 15px',
                     cursor: 'pointer',
@@ -107,7 +106,7 @@ const ProductDetails = () => {
                 }}
                 title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
             >
-                <Heart fill={isWishlisted ? "#B12704" : "none"} color={isWishlisted ? "#B12704" : "#0F1111"} />
+                <Heart fill={isWishlisted ? "var(--price-color)" : "none"} color={isWishlisted ? "var(--price-color)" : "var(--text-primary)"} />
             </button>
         </div>
         

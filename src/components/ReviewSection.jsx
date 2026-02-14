@@ -9,7 +9,6 @@ const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  // Calculate average
   const averageRating = reviews && reviews.length > 0 
     ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) 
     : 0;
@@ -21,10 +20,6 @@ const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
     setSubmitting(true);
     
     try {
-      // Optimistic update or call parent to refresh
-      // For now, let's pretend we saved it to Supabase
-      // In a real app: await supabase.from('reviews').insert(...)
-      
       const newReview = {
         id: Date.now(),
         user: user.email?.split('@')[0] || 'User',
@@ -45,13 +40,13 @@ const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
   };
 
   return (
-    <div className="reviews-section" style={{ marginTop: '40px', borderTop: '1px solid #ddd', paddingTop: '20px' }}>
+    <div className="reviews-section" style={{ marginTop: '40px', borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
       <h2 style={{ fontSize: '24px', fontWeight: 'bold' }}>Customer Reviews</h2>
       
       <div className="rating-summary" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
         <StarRating rating={Math.round(averageRating)} size={24} />
         <span style={{ fontSize: '18px' }}>{averageRating} out of 5</span>
-        <span style={{ color: '#565959' }}>({reviews ? reviews.length : 0} global ratings)</span>
+        <span style={{ color: 'var(--text-secondary)' }}>({reviews ? reviews.length : 0} global ratings)</span>
       </div>
 
       {/* Review List */}
@@ -59,7 +54,7 @@ const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
         {reviews && reviews.map((review) => (
           <div key={review.id} className="review-item" style={{ marginBottom: '20px' }}>
              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#ddd', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'var(--avatar-bg)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     {review.user.charAt(0).toUpperCase()}
                 </div>
                 <strong>{review.user}</strong>
@@ -68,14 +63,14 @@ const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
                 <StarRating rating={review.rating} size={14} />
                 <span style={{ fontWeight: 'bold', marginLeft: '5px' }}>Verified Purchase</span>
              </div>
-             <p style={{ color: '#565959', fontSize: '12px' }}>Reviewed on {review.date}</p>
+             <p style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Reviewed on {review.date}</p>
              <p style={{ marginTop: '5px' }}>{review.comment}</p>
           </div>
         ))}
       </div>
 
       {/* Add Review Form */}
-      <div className="add-review" style={{ marginTop: '30px', background: '#f8f8f8', padding: '20px', borderRadius: '8px' }}>
+      <div className="add-review" style={{ marginTop: '30px', background: 'var(--review-bg)', padding: '20px', borderRadius: '8px' }}>
         <h3>Write a customer review</h3>
         {user ? (
           <form onSubmit={handleSubmit}>
@@ -84,7 +79,7 @@ const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
               <select 
                 value={rating} 
                 onChange={(e) => setRating(parseInt(e.target.value))}
-                style={{ marginLeft: '10px', padding: '5px' }}
+                style={{ marginLeft: '10px', padding: '5px', background: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)', borderRadius: '4px' }}
               >
                 <option value="5">5 Stars</option>
                 <option value="4">4 Stars</option>
@@ -97,7 +92,7 @@ const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
               <label style={{ display: 'block', marginBottom: '5px' }}>Add a written review</label>
               <textarea 
                 rows="4" 
-                style={{ width: '100%', padding: '10px' }} 
+                style={{ width: '100%', padding: '10px', background: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)', borderRadius: '4px' }} 
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 required
@@ -109,19 +104,20 @@ const ReviewSection = ({ productId, reviews, onReviewAdded }) => {
               className="a-button-primary"
               disabled={submitting}
               style={{
-                background: '#FFD814', 
-                border: '1px solid #FCD200', 
+                background: 'var(--btn-primary)', 
+                border: '1px solid var(--btn-primary-hover)', 
                 padding: '8px 16px', 
                 borderRadius: '8px',
                 fontWeight: 'bold',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                color: '#0f1111'
               }}
             >
               Submit
             </button>
           </form>
         ) : (
-          <p>Please <a href="/login" style={{color: '#007185'}}>sign in</a> to write a review.</p>
+          <p>Please <a href="/login" style={{color: 'var(--accent-link)'}}>sign in</a> to write a review.</p>
         )}
       </div>
     </div>

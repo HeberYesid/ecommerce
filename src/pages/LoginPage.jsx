@@ -20,7 +20,7 @@ const LoginPage = () => {
                     password,
                     options: {
                         data: {
-                            role: 'customer' // Default role
+                            role: 'customer'
                         }
                     }
                 });
@@ -35,7 +35,7 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="login-container container" style={{maxWidth: '400px', margin: '40px auto', border: '1px solid #ddd', padding: '20px', borderRadius: '5px'}}>
+        <div className="login-container container" style={{maxWidth: '400px', margin: '40px auto', border: '1px solid var(--border-color)', padding: '20px', borderRadius: '5px', background: 'var(--surface-primary)'}}>
             <h1 className="a-size-medium" style={{fontSize: '28px', marginBottom: '20px'}}>Sign-In</h1>
             <form onSubmit={handleAuth}>
                 <div className="mb-4" style={{marginBottom: '15px'}}>
@@ -46,7 +46,7 @@ const LoginPage = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        style={{width: '100%', padding: '5px 8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #a6a6a6'}}
+                        style={{width: '100%', padding: '5px 8px', marginTop: '5px', borderRadius: '4px', border: '1px solid var(--input-border)', background: 'var(--input-bg)', color: 'var(--text-primary)'}}
                     />
                 </div>
                 <div style={{marginBottom: '15px'}}>
@@ -57,7 +57,7 @@ const LoginPage = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        style={{width: '100%', padding: '5px 8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #a6a6a6'}}
+                        style={{width: '100%', padding: '5px 8px', marginTop: '5px', borderRadius: '4px', border: '1px solid var(--input-border)', background: 'var(--input-bg)', color: 'var(--text-primary)'}}
                     />
                 </div>
                 <button 
@@ -65,21 +65,22 @@ const LoginPage = () => {
                     className="a-button-primary"
                     style={{
                         width: '100%', 
-                        background: '#f0c14b', 
-                        border: '1px solid #a88734', 
+                        background: 'var(--login-btn-bg)', 
+                        border: '1px solid var(--login-btn-border)', 
                         padding: '5px 8px', 
                         cursor: 'pointer',
                         borderRadius: '3px',
-                        boxShadow: '0 1px 0 rgba(255,255,255,.4) inset'
+                        boxShadow: '0 1px 0 rgba(255,255,255,.4) inset',
+                        color: '#0f1111'
                     }}
                 >
                     {loading ? 'Processing...' : (isLogin ? 'Sign-In' : 'Create your Amazon account')}
                 </button>
             </form>
-            <div className="a-divider-break" style={{textAlign: 'center', marginTop: '20px', borderTop: '1px solid #e7e7e7', paddingTop: '10px'}}>
+            <div className="a-divider-break" style={{textAlign: 'center', marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '10px'}}>
                 <span className="a-declarative" 
                     onClick={() => setIsLogin(!isLogin)}
-                    style={{color: '#0066c0', fontSize: '12px', cursor: 'pointer'}}
+                    style={{color: 'var(--accent-link)', fontSize: '12px', cursor: 'pointer'}}
                 >
                     {isLogin ? 'New to Amazon? Create your Amazon account' : 'Already have an account? Sign-In'}
                 </span>
