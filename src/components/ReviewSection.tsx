@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import StarRating from './StarRating';
 import { useAuth } from '../context/AuthContext';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { reviewSchema, type ReviewFormData } from '../schemas';
 import type { Review } from '../types';
 
 interface ReviewSectionProps {
@@ -11,33 +14,39 @@ interface ReviewSectionProps {
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({ productId, reviews, onReviewAdded }) => {
   const { user } = useAuth();
-  const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const averageRating = reviews && reviews.length > 0 
-    ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ReviewFormData>({
+    resolver: zodResolver(reviewSchema),
+    defaultValues: { rating: 5, comment: '' },
+  });
+
+  const averageRating = reviews && reviews.length > 0
+    ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
     : '0';
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: ReviewFormData) => {
     if (!user) return alert('Please sign in to write a review.');
-    
+
     setSubmitting(true);
-    
+
     try {
       const newReview: Review = {
         id: Date.now().toString(),
         user: user.email?.split('@')[0] || 'User',
-        rating,
-        comment,
+        rating: data.rating,
+        comment: data.comment,
         date: new Date().toISOString().split('T')[0]
       };
-      
+
       onReviewAdded(newReview);
-      setComment('');
-      setRating(5);
-      
+      reset();
+
     } catch (error) {
       console.error(error);
     } finally {
@@ -48,7 +57,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ productId, reviews, onRev
   return (
     <div className="reviews-section" style={{ marginTop: '40px', borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
       <h2 style={{ fontSize: '24px', fontWeight: 'bold' }}>Customer Reviews</h2>
-      
+
       <div className="rating-summary" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
         <StarRating rating={Math.round(Number(averageRating))} size={24} />
         <span style={{ fontSize: '18px' }}>{averageRating} out of 5</span>
@@ -77,46 +86,40 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ productId, reviews, onRev
 
       {/* Add Review Form */}
       <div className="add-review" style={{ marginTop: '30px', background: 'var(--review-bg)', padding: '20px', borderRadius: '8px' }}>
-        <h3>Write a customer review</h3>
+        <h3 style={{ marginBottom: '12px' }}>Write a customer review</h3>
         {user ? (
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '10px' }}>
-              <label>Overall rating</label>
-              <select 
-                value={rating} 
-                onChange={(e) => setRating(parseInt(e.target.value))}
-                style={{ marginLeft: '10px', padding: '5px', background: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)', borderRadius: '4px' }}
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <div style={{ marginBottom: '12px' }}>
+              <label className="form-label">Overall rating</label>
+              <select
+                className={`form-input ${errors.rating ? 'form-input-error' : ''}`}
+                {...register('rating', { valueAsNumber: true })}
+                title="Select a rating"
+                style={{ maxWidth: '150px' }}
               >
-                <option value="5">5 Stars</option>
-                <option value="4">4 Stars</option>
-                <option value="3">3 Stars</option>
-                <option value="2">2 Stars</option>
-                <option value="1">1 Star</option>
+                <option value={5}>5 Stars</option>
+                <option value={4}>4 Stars</option>
+                <option value={3}>3 Stars</option>
+                <option value={2}>2 Stars</option>
+                <option value={1}>1 Star</option>
               </select>
+              {errors.rating && <p className="form-error">{errors.rating.message}</p>}
             </div>
-            <div style={{ marginBottom: '10px' }}>
-              <label style={{ display: 'block', marginBottom: '5px' }}>Add a written review</label>
-              <textarea 
-                rows={4} 
-                style={{ width: '100%', padding: '10px', background: 'var(--input-bg)', color: 'var(--text-primary)', border: '1px solid var(--input-border)', borderRadius: '4px' }} 
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                required
+            <div style={{ marginBottom: '12px' }}>
+              <label className="form-label">Add a written review</label>
+              <textarea
+                rows={4}
+                className={`form-input ${errors.comment ? 'form-input-error' : ''}`}
+                {...register('comment')}
                 placeholder="What did you like or dislike? What did you use this product for?"
               />
+              {errors.comment && <p className="form-error">{errors.comment.message}</p>}
             </div>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={submitting}
-              style={{
-                background: 'var(--btn-primary)', 
-                border: '1px solid var(--btn-primary-hover)', 
-                padding: '8px 16px', 
-                borderRadius: '8px',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                color: '#0f1111'
-              }}
+              className="form-submit-btn"
+              style={{ padding: '8px 20px' }}
             >
               Submit
             </button>

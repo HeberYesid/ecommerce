@@ -535,7 +535,6 @@ button {
   background: var(--surface-primary);
 }
 
-
 /* ========================================================
    RESPONSIVE BREAKPOINTS
    ======================================================== */
@@ -600,7 +599,6 @@ button {
     margin: 20px auto;
   }
 }
-
 
 /* ---- MOBILE (max-width: 640px) ---- */
 @media (max-width: 640px) {
@@ -750,4 +748,114 @@ button {
   .nav-links {
     gap: 5px;
   }
+}
+
+/* ─── Form Validation Styles ─────────────────────────────────── */
+
+.form-label {
+  display: block;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: var(--text-primary);
+}
+
+.form-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--input-border, var(--border-color));
+  border-radius: 4px;
+  background: var(--input-bg, var(--surface-primary));
+  color: var(--text-primary);
+  font-size: 14px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--amazon-orange);
+  box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.15);
+}
+
+.form-input-error {
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1) !important;
+}
+
+.form-error {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: slideDown 0.2s ease;
+}
+
+.form-error::before {
+  content: "⚠";
+  font-size: 11px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Role selector cards */
+.role-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  background: var(--surface-primary);
+  transition: all 0.2s ease;
+}
+
+.role-card:hover {
+  border-color: var(--amazon-orange);
+  background: var(--surface-secondary);
+}
+
+.role-card-active {
+  border: 2px solid var(--amazon-orange) !important;
+  background: var(--surface-secondary);
+}
+
+/* Submit button */
+.form-submit-btn {
+  width: 100%;
+  background: var(--login-btn-bg, var(--btn-primary));
+  border: 1px solid var(--login-btn-border, var(--btn-primary-hover));
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset;
+  color: #0f1111;
+  font-weight: 700;
+  font-size: 14px;
+  transition: background 0.15s ease;
+}
+
+.form-submit-btn:hover {
+  background: var(--btn-primary-hover);
+}
+
+.form-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

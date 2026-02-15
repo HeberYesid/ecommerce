@@ -2,18 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { Link, Navigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { productSchema, type ProductFormData } from '../schemas';
 import type { Product } from '../types';
 
 const SellerPage: React.FC = () => {
     const { user, isSeller, isLoggedIn } = useAuth();
 
-    const [title, setTitle] = useState('');
-    const [price, setPrice] = useState('');
-    const [description, setDescription] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
-    const [category, setCategory] = useState('Electronics');
     const [loading, setLoading] = useState(false);
     const [myProducts, setMyProducts] = useState<Product[]>([]);
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm<ProductFormData>({
+        resolver: zodResolver(productSchema),
+        defaultValues: {
+            title: '',
+            price: '',
+            description: '',
+            image_url: '',
+            category: 'Electronics',
+        },
+    });
 
     useEffect(() => {
         if (user && isSeller) {
@@ -48,7 +62,7 @@ const SellerPage: React.FC = () => {
                 .from('products')
                 .select('*')
                 .eq('seller_id', user!.id);
-            
+
             if (error) throw error;
             setMyProducts((data as Product[]) || []);
         } catch (error) {
@@ -67,7 +81,7 @@ const SellerPage: React.FC = () => {
                 .eq('id', id);
 
             if (error) throw error;
-            
+
             setMyProducts(prev => prev.filter(p => p.id !== id));
             alert('Product deleted successfully');
         } catch (error: any) {
@@ -77,30 +91,25 @@ const SellerPage: React.FC = () => {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const onSubmit = async (data: ProductFormData) => {
         setLoading(true);
 
         try {
-            const { data, error } = await supabase.from('products').insert([
+            const { data: inserted, error } = await supabase.from('products').insert([
                 {
-                    title,
-                    price: parseFloat(price),
-                    description,
-                    image_url: imageUrl,
-                    category,
+                    title: data.title,
+                    price: parseFloat(data.price),
+                    description: data.description,
+                    image_url: data.image_url,
+                    category: data.category,
                     seller_id: user!.id
                 }
             ]).select();
 
             if (error) throw error;
             alert('Product added successfully!');
-            setTitle('');
-            setPrice('');
-            setDescription('');
-            setImageUrl('');
-            setCategory('Electronics');
-            if (data) setMyProducts(prev => [...prev, ...(data as Product[])]);
+            reset();
+            if (inserted) setMyProducts(prev => [...prev, ...(inserted as Product[])]);
         } catch (error: any) {
             alert('Error adding product: ' + error.message);
         } finally {
@@ -116,46 +125,40 @@ const SellerPage: React.FC = () => {
                     ({user?.email})
                 </span>
             </h1>
-            
-            <div style={{background: 'var(--surface-tertiary)', border: '1px solid var(--border-color)', padding: '20px', borderRadius: '4px', marginBottom: '40px'}}>
+
+            <div style={{background: 'var(--surface-tertiary)', border: '1px solid var(--border-color)', padding: '20px', borderRadius: '8px', marginBottom: '40px'}}>
                 <h2 style={{fontSize: '20px', marginBottom: '15px'}}>Add a New Product</h2>
-                <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
+                <form onSubmit={handleSubmit(onSubmit)} noValidate style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                    {/* Title */}
                     <div>
-                        <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Product Title</label>
-                        <input 
-                            type="text" 
-                            required 
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            style={{width: '100%', padding: '8px', border: '1px solid var(--input-border)', borderRadius: '3px', background: 'var(--input-bg)', color: 'var(--text-primary)'}}
+                        <label className="form-label">Product Title</label>
+                        <input
+                            type="text"
+                            className={`form-input ${errors.title ? 'form-input-error' : ''}`}
+                            {...register('title')}
+                            placeholder="e.g. Wireless Bluetooth Headphones"
                         />
+                        {errors.title && <p className="form-error">{errors.title.message}</p>}
                     </div>
 
+                    {/* Price + Category Row */}
                     <div className="seller-form-row">
                         <div>
-                            <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Price ($)</label>
-                            <input 
-                                type="number" 
-                                step="0.01" 
-                                required 
-                                value={price}
-                                onChange={(e) => setPrice(e.target.value)}
-                                style={{width: '100%', padding: '8px', border: '1px solid var(--input-border)', borderRadius: '3px', background: 'var(--input-bg)', color: 'var(--text-primary)'}}
+                            <label className="form-label">Price ($)</label>
+                            <input
+                                type="text"
+                                inputMode="decimal"
+                                className={`form-input ${errors.price ? 'form-input-error' : ''}`}
+                                {...register('price')}
+                                placeholder="29.99"
                             />
+                            {errors.price && <p className="form-error">{errors.price.message}</p>}
                         </div>
                         <div>
-                            <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Category</label>
-                            <select 
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
-                                style={{
-                                    width: '100%', 
-                                    padding: '8px', 
-                                    border: '1px solid var(--input-border)', 
-                                    borderRadius: '3px',
-                                    background: 'var(--input-bg)',
-                                    color: 'var(--text-primary)'
-                                }}
+                            <label className="form-label">Category</label>
+                            <select
+                                className={`form-input ${errors.category ? 'form-input-error' : ''}`}
+                                {...register('category')}
                             >
                                 <option value="Electronics">Electronics</option>
                                 <option value="Gaming">Gaming</option>
@@ -164,51 +167,47 @@ const SellerPage: React.FC = () => {
                                 <option value="Fashion">Fashion</option>
                                 <option value="Other">Other</option>
                             </select>
+                            {errors.category && <p className="form-error">{errors.category.message}</p>}
                         </div>
                     </div>
 
+                    {/* Image URL */}
                     <div>
-                        <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Image URL</label>
-                        <input 
-                            type="url" 
-                            required 
-                            value={imageUrl}
-                            onChange={(e) => setImageUrl(e.target.value)}
+                        <label className="form-label">Image URL</label>
+                        <input
+                            type="url"
+                            className={`form-input ${errors.image_url ? 'form-input-error' : ''}`}
+                            {...register('image_url')}
                             placeholder="https://example.com/image.jpg"
-                            style={{width: '100%', padding: '8px', border: '1px solid var(--input-border)', borderRadius: '3px', background: 'var(--input-bg)', color: 'var(--text-primary)'}}
                         />
+                        {errors.image_url && <p className="form-error">{errors.image_url.message}</p>}
                     </div>
 
+                    {/* Description */}
                     <div>
-                        <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Description</label>
-                        <textarea 
-                            required 
-                            rows={4} 
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            style={{width: '100%', padding: '8px', border: '1px solid var(--input-border)', borderRadius: '3px', resize: 'vertical', background: 'var(--input-bg)', color: 'var(--text-primary)'}}
+                        <label className="form-label">Description</label>
+                        <textarea
+                            rows={4}
+                            className={`form-input ${errors.description ? 'form-input-error' : ''}`}
+                            {...register('description')}
+                            placeholder="Describe your product in detail..."
+                            style={{resize: 'vertical'}}
                         />
+                        {errors.description && <p className="form-error">{errors.description.message}</p>}
                     </div>
 
-                    <button 
-                        type="submit" 
+                    <button
+                        type="submit"
                         disabled={loading}
-                        style={{
-                            alignSelf: 'flex-start',
-                            background: 'var(--login-btn-bg)',
-                            border: '1px solid var(--login-btn-border)',
-                            padding: '8px 20px',
-                            cursor: 'pointer',
-                            borderRadius: '3px',
-                            fontWeight: 'bold',
-                            color: '#0f1111'
-                        }}
+                        className="form-submit-btn"
+                        style={{alignSelf: 'flex-start'}}
                     >
                         {loading ? 'Processing...' : 'Add Product'}
                     </button>
                 </form>
             </div>
 
+            {/* Product Listings */}
             <div>
                 <h2 style={{fontSize: '22px', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px'}}>Your Listings</h2>
                 {myProducts.length === 0 ? (
@@ -223,7 +222,7 @@ const SellerPage: React.FC = () => {
                                     <p style={{fontWeight: 'bold', color: 'var(--price-color)'}}>${product.price}</p>
                                     <p style={{fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px'}}>{product.category}</p>
                                 </div>
-                                <button 
+                                <button
                                     onClick={() => handleDelete(product.id)}
                                     style={{
                                         background: 'var(--surface-primary)',
