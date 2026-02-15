@@ -78,7 +78,7 @@ const LoginPage: React.FC = () => {
                 fontSize: '12px',
                 color: 'var(--text-secondary)'
             }}>
-                ℹ️ This is a test form. You can enter fake data to test the application.
+                
             </div>
 
             {serverError && (
