@@ -7,6 +7,7 @@ import { Heart } from 'lucide-react';
 import { useWishlist } from '../context/WishlistContext';
 import { mockProducts } from '../data/mockProducts';
 import ReviewSection from '../components/ReviewSection';
+import LazyImage from '../components/LazyImage';
 import type { Product, Review } from '../types';
 
 const ProductDetails: React.FC = () => {
@@ -86,7 +87,7 @@ const ProductDetails: React.FC = () => {
   return (
     <div className="product-details container">
       <div className="product-image-large">
-        <img src={product.image_url} alt={product.title} />
+        <LazyImage src={product.image_url} alt={product.title} />
       </div>
       <div className="product-info-full">
         <h1 style={{fontSize: '22px', lineHeight: 1.3}}>{product.title}</h1>

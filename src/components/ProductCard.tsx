@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import LazyImage from './LazyImage';
 import type { Product } from '../types';
 
 interface ProductCardProps {
@@ -28,7 +29,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <div className="product-card">
       <Link to={`/product/${id}`} className="product-image-container">
-        <img src={image_url || 'https://via.placeholder.com/200'} alt={title} className="product-image" />
+        <LazyImage src={image_url || 'https://via.placeholder.com/200'} alt={title} className="product-image" />
       </Link>
       <div className="product-info">
         <Link to={`/product/${id}`} className="product-title" title={title}>
