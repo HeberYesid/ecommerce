@@ -4,17 +4,46 @@ import { Search, ShoppingCart, LogOut, Sun, Moon, Package } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
+import { useProducts } from '../context/ProductContext';
+import type { Product } from '../types';
 
 const Navbar: React.FC = () => {
     const { user, signOut, isCustomer, isSeller, isLoggedIn } = useAuth();
     const { cart } = useCart();
     const { theme, toggleTheme } = useTheme();
+    const { products } = useProducts();
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
+    const [suggestions, setSuggestions] = useState<Product[]>([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
+        setShowSuggestions(false);
         navigate(`/?search=${searchTerm}`);
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const query = e.target.value;
+        setSearchTerm(query);
+        
+        if (query.trim().length > 0) {
+            const filtered = products.filter(p => 
+                p.title.toLowerCase().includes(query.toLowerCase()) || 
+                p.category.toLowerCase().includes(query.toLowerCase())
+            ).slice(0, 5);
+            setSuggestions(filtered);
+            setShowSuggestions(true);
+        } else {
+            setSuggestions([]);
+            setShowSuggestions(false);
+        }
+    };
+
+    const handleSuggestionClick = (productId: string) => {
+        setSearchTerm('');
+        setShowSuggestions(false);
+        navigate(`/product/${productId}`);
     };
 
     const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -25,18 +54,48 @@ const Navbar: React.FC = () => {
                 <span style={{color: 'white'}}>amazon</span><span style={{color: '#ff9900'}}>.mvp</span>
             </Link>
 
-            <form className="search-bar" onSubmit={handleSearch}>
-                <input 
-                    type="text" 
-                    className="search-input"
-                    placeholder="Search Amazon MVP"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <button type="submit" className="search-btn">
-                    <Search color="#131921" size={24} />
-                </button>
-            </form>
+            <div className="search-container">
+                <form className="search-bar" onSubmit={handleSearch}>
+                    <input 
+                        type="text" 
+                        className="search-input"
+                        placeholder="Search Amazon MVP"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        onFocus={() => { if(searchTerm) setShowSuggestions(true); }}
+                        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                    />
+                    <button type="submit" className="search-btn">
+                        <Search color="#131921" size={24} />
+                    </button>
+                </form>
+
+                {showSuggestions && suggestions.length > 0 && (
+                    <div className="search-suggestions">
+                        {suggestions.map(product => (
+                            <div 
+                                key={product.id}
+                                className="suggestion-item"
+                                onClick={() => handleSuggestionClick(product.id)}
+                            >
+                                <img 
+                                    src={product.image_url} 
+                                    alt={product.title} 
+                                    className="suggestion-image"
+                                />
+                                <div className="suggestion-details">
+                                    <span className="suggestion-title">
+                                        {product.title}
+                                    </span>
+                                    <span className="suggestion-category">
+                                        in {product.category}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
 
             <div className="nav-links">
                 <button 

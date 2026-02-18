@@ -1,64 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 import ProductCard from '../components/ProductCard';
 import { useSearchParams } from 'react-router-dom';
-import { mockProducts } from '../data/mockProducts';
 import type { Product } from '../types';
+import { useProducts } from '../context/ProductContext';
 
 const HomePage: React.FC = () => {
+  const { products: allProducts, loading } = useProducts();
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
   const selectedCategory = searchParams.get('category') || 'All';
-
+  
   useEffect(() => {
-    fetchProducts();
-  }, [searchQuery, selectedCategory]);
-
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      let supabaseData: Product[] = [];
-      const { data, error } = await supabase.from('products').select('*');
-      
-      if (!error && data) {
-          supabaseData = data as Product[];
-      }
-
-      const allProducts = [...mockProducts, ...supabaseData];
-      filterUnifiedData(allProducts);
-
-    } catch (e) {
-      console.warn('Fetch exception, falling back to mock data only:', e);
-      filterUnifiedData(mockProducts);
-    } finally {
-      setLoading(false);
+    if (loading) return;
+    
+    let filtered = allProducts;
+    
+    if (searchQuery) {
+        filtered = filtered.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()));
     }
-  };
 
-  const filterUnifiedData = (allData: Product[]) => {
-      let filtered = allData;
-      
-      if (searchQuery) {
-          filtered = filtered.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()));
-      }
+    if (selectedCategory && selectedCategory !== 'All') {
+        filtered = filtered.filter(p => p.category === selectedCategory);
+    }
 
-      if (selectedCategory && selectedCategory !== 'All') {
-          filtered = filtered.filter(p => p.category === selectedCategory);
-      }
-      
-      const unique: Product[] = [];
-      const seen = new Set<string>();
-      for (const p of filtered) {
-          if (!seen.has(p.id)) {
-              seen.add(p.id);
-              unique.push(p);
-          }
-      }
-
-      setProducts(unique);
-  };
+    setProducts(filtered);
+  }, [searchQuery, selectedCategory, allProducts, loading]);
 
   const categories = ['All', 'Electronics', 'Gaming', 'Wearables', 'Home', 'Fashion', 'Other'];
 
