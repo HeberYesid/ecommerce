@@ -859,3 +859,126 @@ button {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* ================================
+   UI COMPONENTS
+   ================================ */
+
+/* Skeleton Loading */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-secondary) 25%,
+    var(--surface-tertiary) 50%,
+    var(--surface-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ================================
+   FILTERS (If missing)
+   ================================ */
+.filter-section {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.filter-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+
+.filter-list {
+  list-style: none;
+}
+
+.filter-category-btn {
+  background: none;
+  border: none;
+  padding: 4px 0;
+  color: var(--text-primary);
+  font-size: 14px;
+  text-align: left;
+  width: 100%;
+}
+
+.filter-category-btn:hover,
+.filter-category-btn.active {
+  color: var(--match-color, #c7511f); /* Fallback or var */
+  font-weight: bold;
+}
+
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.price-input {
+  width: 60px;
+  padding: 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.go-btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(15, 17, 17, 0.15);
+}
+
+.rating-filter {
+  cursor: pointer;
+  padding: 2px 0;
+  display: flex;
+  align-items: center;
+}
+
+.rating-filter:hover .rating-stars {
+  color: #c7511f;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.filter-tag {
+  display: inline-block;
+  background: var(--surface-secondary);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-right: 5px;
+  border: 1px solid var(--border-color);
+}
+
+.clear-filters-btn {
+  background: none;
+  border: none;
+  color: var(--link-color);
+  font-size: 12px;
+  text-decoration: underline;
+  padding: 0;
+}

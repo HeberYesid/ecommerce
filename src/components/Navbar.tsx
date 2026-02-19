@@ -115,12 +115,24 @@ const Navbar: React.FC = () => {
                             </div>
                         )}
 
-                        {isCustomer && (
-                            <div className="nav-item" style={{cursor: 'default'}}>
-                                <span style={{fontSize: '11px', fontWeight: 'normal'}}>Hello, {user?.email?.split('@')[0]}</span>
-                                <span>Client</span>
+                        {isSeller && (
+                             <div className="nav-item" onClick={() => navigate('/admin')}>
+                                <span style={{fontSize: '11px', fontWeight: 'normal'}}>Manage</span>
+                                <span>Admin</span>
                             </div>
                         )}
+
+                        {isCustomer && (
+                            <div className="nav-item" onClick={() => navigate('/profile')}>
+                                <span style={{fontSize: '11px', fontWeight: 'normal'}}>Hello, {user?.email?.split('@')[0]}</span>
+                                <span>Profile</span>
+                            </div>
+                        )}
+
+                        <Link to="/orders" className="nav-item">
+                            <span style={{fontSize: '11px', fontWeight: 'normal'}}>Returns</span>
+                            <span>& Orders</span>
+                        </Link>
 
                         <div className="nav-item" onClick={() => { signOut(); }} title="Sign Out">
                             <LogOut size={18} />
